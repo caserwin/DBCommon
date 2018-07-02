@@ -19,19 +19,19 @@ public class HiveDAO {
     private Connection conn;
 
     public HiveDAO() {
-//        this.conn = DBConnection.getConnection(DBType, URLHIVE);
+        this.conn = DBConnection.getConnection(DBType, URLHIVE);
     }
 
     public <T> void create(String tablename, Class<T> clazz) {
         try {
             HashMap<String, String> colAndType = ReflectionService.getColAndType(clazz);
             String fields = colAndType.entrySet().stream().map(x -> x.getKey() + "\t" + x.getValue()).collect(Collectors.joining(","));
+            Statement stmt = this.conn.createStatement();
             String sql = "create table if not exists " + tablename + "(" + fields + ")"
                              + " row format delimited fields terminated by '\\t'"
                              + " collection items terminated by ','";
 
             System.out.println(sql);
-            Statement stmt = this.conn.createStatement();
             stmt.execute(sql);
         } catch (Exception e) {
             e.printStackTrace();

@@ -5,9 +5,7 @@ package jdbc.bean;
  */
 public class PersonRecord extends BaseRecord {
 
-    static {
-        BaseRecord.cls = "person";
-    }
+    public static String cls = "person";
 
     @Override
     public PersonRecord buildFields(String... args) {

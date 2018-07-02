@@ -1,6 +1,7 @@
 package jdbc.bean;
 
 import jdbc.conn.URLConstant;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -8,21 +9,13 @@ import java.util.stream.Collectors;
 
 /**
  * Created by yidxue on 2018/7/2
+ * 心得：
+ * 1. 属于类的方法的参数是不该通过一个对象实例来传进来的。因为和new 对象没有关系。
+ * 2. 一个对象实例也确实不应该看到类的方法。
  */
 public abstract class BaseRecord {
 
-    public static String cls;
-    private static String[] primaryKey = URLConstant.getPrimaryKey(cls);
-    private static String[] cols = URLConstant.getCols(cls);
-    private static String[] types = URLConstant.getType(cls);
-    private static LinkedHashMap<String, String> colAndType = new LinkedHashMap<>();
     private LinkedHashMap<String, String> colAndValue;
-
-    static {
-        for (int i = 0; i < cols.length; i++) {
-            colAndType.put(cols[i], types[i]);
-        }
-    }
 
     public BaseRecord() {
         colAndValue = new LinkedHashMap<>();
@@ -38,19 +31,25 @@ public abstract class BaseRecord {
         return colAndValue;
     }
 
-    public static String[] getPrimaryKey() {
-        return primaryKey;
+    public static String[] getPrimaryKey(String cls) {
+        return URLConstant.getPrimaryKey(cls);
     }
 
-    public static String[] getCols() {
-        return cols;
+    public static String[] getCols(String cls) {
+        return URLConstant.getCols(cls);
     }
 
-    public static String[] getTypes() {
-        return types;
+    public static String[] getTypes(String cls) {
+        return URLConstant.getType(cls);
     }
 
-    public static HashMap<String, String> getColAndType() {
+    public static HashMap<String, String> getColAndType(String cls) {
+        LinkedHashMap<String, String> colAndType = new LinkedHashMap<>();
+        String[] cols = getCols(cls);
+        String[] types = getTypes(cls);
+        for (int i = 0; i < cols.length; i++) {
+            colAndType.put(cols[i], types[i]);
+        }
         return colAndType;
     }
 

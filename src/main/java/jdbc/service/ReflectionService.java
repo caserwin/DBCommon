@@ -13,9 +13,10 @@ public class ReflectionService {
     public static <T> String[] getCols(Class<T> clazz) {
         String[] cols = null;
         try {
-            Method m2 = clazz.getMethod("getCols");
-            cols = (String[]) m2.invoke(null);
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            String cls = clazz.getField("cls").get(clazz).toString();
+            Method m2 = clazz.getMethod("getCols", String.class);
+            cols = (String[]) m2.invoke(null, cls);
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
         }
         return cols;
@@ -24,9 +25,10 @@ public class ReflectionService {
     public static <T> String[] getPrimaryKey(Class<T> clazz) {
         String[] primaryKey = null;
         try {
-            Method m2 = clazz.getMethod("getPrimaryKey");
-            primaryKey = (String[]) m2.invoke(null);
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            String cls = clazz.getField("cls").get(clazz).toString();
+            Method m2 = clazz.getMethod("getPrimaryKey", String.class);
+            primaryKey = (String[]) m2.invoke(null, cls);
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
         }
         return primaryKey;
@@ -35,9 +37,10 @@ public class ReflectionService {
     public static <T> String[] getTypes(Class<T> clazz) {
         String[] types = null;
         try {
-            Method m2 = clazz.getMethod("getTypes");
-            types = (String[]) m2.invoke(null);
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            String cls = clazz.getField("cls").get(clazz).toString();
+            Method m2 = clazz.getMethod("getTypes", String.class);
+            types = (String[]) m2.invoke(null, cls);
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
         }
         return types;
@@ -46,9 +49,10 @@ public class ReflectionService {
     public static <T> HashMap<String, String> getColAndType(Class<T> clazz) {
         HashMap<String, String> colAndType = null;
         try {
-            Method m2 = clazz.getMethod("getColAndType");
-            colAndType = (HashMap<String, String>) m2.invoke(null);
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            String cls = clazz.getField("cls").get(clazz).toString();
+            Method m2 = clazz.getMethod("getColAndType", String.class);
+            colAndType = (HashMap<String, String>) m2.invoke(null, cls);
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
         }
         return colAndType;
