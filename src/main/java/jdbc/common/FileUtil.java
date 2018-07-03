@@ -1,4 +1,4 @@
-package jdbc.service;
+package jdbc.common;
 
 import java.io.*;
 import java.nio.file.Files;

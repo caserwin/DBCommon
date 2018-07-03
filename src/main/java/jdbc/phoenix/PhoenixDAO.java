@@ -1,9 +1,9 @@
 package jdbc.phoenix;
 
-import jdbc.DBOperate;
-import jdbc.bean.PersonRecord;
+import jdbc.common.DBOperate;
+import jdbc.app.PersonRecord;
 import jdbc.conn.DBConnection;
-import jdbc.service.ReflectionService;
+import jdbc.common.ReflectionUtil;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -31,9 +31,9 @@ public class PhoenixDAO implements DBOperate<Object> {
 
     @Override
     public <T> void create(String tablename, Class<T> clazz) {
-        HashMap<String, String> colAndType = ReflectionService.getColAndType(clazz);
+        HashMap<String, String> colAndType = ReflectionUtil.getColAndType(clazz);
         HashMap<String, String> typeMap = PhoenixService.getTypeMap();
-        String[] pkArray = ReflectionService.getPrimaryKey(clazz);
+        String[] pkArray = ReflectionUtil.getPrimaryKey(clazz);
         String primaryKey = Stream.of(pkArray).collect(Collectors.joining(","));
         String field = colAndType.entrySet().stream().map(x -> {
                 if (PhoenixService.isPrimaryKey(pkArray, x.getKey())) {

@@ -1,9 +1,9 @@
 package jdbc.hive;
 
-import jdbc.DBOperate;
+import jdbc.common.DBOperate;
 import jdbc.conn.DBConnection;
-import jdbc.service.FileUtil;
-import jdbc.service.ReflectionService;
+import jdbc.common.FileUtil;
+import jdbc.common.ReflectionUtil;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class HiveDAO implements DBOperate<Object>{
     @Override
     public <T> void create(String tablename, Class<T> clazz) {
         try {
-            HashMap<String, String> colAndType = ReflectionService.getColAndType(clazz);
+            HashMap<String, String> colAndType = ReflectionUtil.getColAndType(clazz);
             String fields = colAndType.entrySet().stream().map(x -> x.getKey() + "\t" + x.getValue()).collect(Collectors.joining(","));
             Statement stmt = this.conn.createStatement();
             String sql = "create table if not exists " + tablename + "(" + fields + ")"
@@ -52,7 +52,7 @@ public class HiveDAO implements DBOperate<Object>{
 
     public <T> void loadToHive(ArrayList<T> records, Class<T> clazz, String tableName, String path) {
         try {
-            FileUtil.writeByStream(records.stream().map(x -> ReflectionService.getValues(x, clazz).stream().collect(Collectors.joining("\t"))).collect(Collectors.toList()), path);
+            FileUtil.writeByStream(records.stream().map(x -> ReflectionUtil.getValues(x, clazz).stream().collect(Collectors.joining("\t"))).collect(Collectors.toList()), path);
             // 每一层目录都设置 777 权限
             FileUtil.changeFolderPermission(path, true);
             Statement stmt = this.conn.createStatement();

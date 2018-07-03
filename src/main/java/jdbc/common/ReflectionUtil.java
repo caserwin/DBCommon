@@ -1,4 +1,4 @@
-package jdbc.service;
+package jdbc.common;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -8,7 +8,7 @@ import java.util.HashMap;
 /**
  * Created by yidxue on 2018/7/1
  */
-public class ReflectionService {
+public class ReflectionUtil {
 
     public static <T> String[] getCols(Class<T> clazz) {
         String[] cols = null;

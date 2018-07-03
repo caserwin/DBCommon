@@ -1,4 +1,4 @@
-package jdbc.conn;
+package jdbc.common;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
