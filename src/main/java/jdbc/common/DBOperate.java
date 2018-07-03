@@ -19,5 +19,5 @@ public interface DBOperate<T> {
     /**
      * 查询数据
      */
-    <T> void select(String tablename, Class<T> clazz);
+    <T> ArrayList<T> select(String tablename, Class<T> clazz, String[] cols, ArrayList<Tuple3<String, String, String>> cond);
 }

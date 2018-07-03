@@ -20,6 +20,7 @@ public abstract class BaseRecord {
     }
 
     public abstract BaseRecord buildFields(String... args);
+    public abstract BaseRecord buildFields(LinkedHashMap<String, String> colAndValue);
 
     public void setColAndValue(String field, String value) {
         colAndValue.put(field, value);
@@ -28,6 +29,11 @@ public abstract class BaseRecord {
     public HashMap<String, String> getColAndValue() {
         return colAndValue;
     }
+
+    public void setColAndValue(LinkedHashMap<String, String> colAndValue) {
+        this.colAndValue = colAndValue;
+    }
+
 
     public static String[] getPrimaryKey(String cls) {
         return URLConstant.getPrimaryKey(cls);

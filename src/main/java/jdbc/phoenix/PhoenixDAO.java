@@ -2,6 +2,7 @@ package jdbc.phoenix;
 
 import jdbc.common.DBOperate;
 import jdbc.app.PersonRecord;
+import jdbc.common.Tuple3;
 import jdbc.conn.DBConnection;
 import jdbc.common.ReflectionUtil;
 import java.sql.Connection;
@@ -78,8 +79,8 @@ public class PhoenixDAO implements DBOperate<Object> {
     }
 
     @Override
-    public <T> void select(String tablename, Class<T> clazz) {
-
+    public <T> ArrayList<T> select(String tablename, Class<T> clazz, String[] cols, ArrayList<Tuple3<String, String, String>> cond) {
+        return null;
     }
 
 

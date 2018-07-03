@@ -1,21 +1,26 @@
 package jdbc.hive;
 
 import jdbc.common.DBOperate;
-import jdbc.conn.DBConnection;
 import jdbc.common.FileUtil;
 import jdbc.common.ReflectionUtil;
+import jdbc.common.Tuple3;
+import jdbc.conn.DBConnection;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author yidxue
  */
-public class HiveDAO implements DBOperate<Object>{
+public class HiveDAO implements DBOperate<Object> {
 
-    private String URLHIVE = "jdbc:hive2://localhost:10000/default";
+    private String URLHIVE = "jdbc:hive2://10.29.42.49:10000/default";
     private String DBType = "hive";
     private Connection conn;
 
@@ -46,8 +51,37 @@ public class HiveDAO implements DBOperate<Object>{
     }
 
     @Override
-    public <T> void select(String tablename, Class<T> clazz) {
-
+    public <T> ArrayList<T> select(String tablename, Class<T> clazz, String[] cols, ArrayList<Tuple3<String, String, String>> conds) {
+        ArrayList<T> recordLS = new ArrayList<>();
+        String fields = Stream.of(cols).collect(Collectors.joining(","));
+        HashMap<String, String> colAndType = ReflectionUtil.getColAndType(clazz);
+        String sql = "SELECT " + fields + " FROM " + tablename;
+        if (conds != null && conds.size() != 0) {
+            String condStr = conds.stream().map(x -> {
+                if ("string".equals(colAndType.get(x.column.toLowerCase()).toLowerCase())) {
+                    return x.column + " " + x.operator + " " + "'" + x.value + "'";
+                } else {
+                    return x.column + " " + x.operator + " " + x.value;
+                }
+            }).collect(Collectors.joining(" and "));
+            sql = sql + " where " + condStr;
+        }
+        System.out.println(sql);
+        try {
+            Statement stmt = this.conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                LinkedHashMap<String, String> colAndValue = new LinkedHashMap<>();
+                for (String col : cols) {
+                    colAndValue.put(col, rs.getString(col));
+                }
+                recordLS.add(ReflectionUtil.buildFields(clazz, colAndValue));
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return recordLS;
     }
 
     public <T> void loadToHive(ArrayList<T> records, Class<T> clazz, String tableName, String path) {
@@ -63,6 +97,4 @@ public class HiveDAO implements DBOperate<Object>{
             e.printStackTrace();
         }
     }
-
-
 }

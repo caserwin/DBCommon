@@ -1,9 +1,11 @@
 package jdbc.common;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * Created by yidxue on 2018/7/1
@@ -75,6 +77,19 @@ public class ReflectionUtil {
             Method m = clazz.getMethod("getValues");
             values = (ArrayList<String>) m.invoke(clazz.cast(obj));
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return values;
+    }
+
+    public static <T> T buildFields(Class<T> clazz, LinkedHashMap<String, String> colAndValue) {
+        T values = null;
+        try {
+            Constructor<?> c = clazz.getConstructor();
+            Object obj = c.newInstance();
+            Method m = clazz.getMethod("buildFields", LinkedHashMap.class);
+            values = (T) m.invoke(clazz.cast(obj), colAndValue);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
             e.printStackTrace();
         }
         return values;

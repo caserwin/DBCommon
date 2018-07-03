@@ -1,8 +1,10 @@
 package jdbc.app;
 
 import jdbc.common.BaseRecord;
+import jdbc.common.Tuple3;
 import jdbc.hive.HiveDAO;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 /**
  * Created by yidxue on 2018/6/30
@@ -20,6 +22,12 @@ public class PersonRecord extends BaseRecord {
         return this;
     }
 
+    @Override
+    public PersonRecord buildFields(LinkedHashMap<String, String> colAndValueMap) {
+        super.setColAndValue(colAndValueMap);
+        return this;
+    }
+
     public static void main(String[] args) {
         if (args.length != 2) {
             System.out.println("args error!");
@@ -31,7 +39,6 @@ public class PersonRecord extends BaseRecord {
         HiveDAO hiveDAO = new HiveDAO();
         // create table
         hiveDAO.create(table, PersonRecord.class);
-
         ArrayList<PersonRecord> records = new ArrayList<>();
         records.add(new PersonRecord().buildFields("1", "erwin1", "19", "male"));
         records.add(new PersonRecord().buildFields("2", "erwin2", "29", "male"));
@@ -39,5 +46,15 @@ public class PersonRecord extends BaseRecord {
 
         // load data
         hiveDAO.loadToHive(records, PersonRecord.class, table, path);
+
+        // select data
+        ArrayList<Tuple3<String, String, String>> conds = new ArrayList<>();
+        conds.add(new Tuple3("name", "like", "erwin%"));
+        conds.add(new Tuple3("id", "in", "(1,2)"));
+
+        ArrayList<PersonRecord> personRecords = hiveDAO.select(table, PersonRecord.class, new String[]{"id", "name"}, conds);
+        for (PersonRecord ps : personRecords) {
+            System.out.println(ps);
+        }
     }
 }
