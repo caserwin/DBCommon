@@ -14,10 +14,10 @@ public interface DBOperate<T> {
     /**
      * 插入数据
      */
-    public void insert(String tablename, ArrayList<T> record);
+    public <T> void insert(String tablename, Class<T> clazz, ArrayList<Object> record);
 
     /**
      * 查询数据
      */
-    public void select(String tablename, ArrayList<T> record);
+    public <T> void select(String tablename, Class<T> clazz);
 }

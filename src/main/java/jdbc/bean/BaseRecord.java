@@ -1,7 +1,6 @@
 package jdbc.bean;
 
 import jdbc.conn.URLConstant;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;

@@ -16,14 +16,14 @@ public class URLConstant {
 
 
     public static String[] getPrimaryKey(String cls) {
-        return conf.getString("database.been." + cls + ".primarykey").toLowerCase().split(",");
+        return conf.getString("database.table." + cls + ".primarykey").toLowerCase().split(",");
     }
 
     public static String[] getCols(String cls) {
-        return conf.getString("database.been." + cls + ".cols").toLowerCase().split(",");
+        return conf.getString("database.table." + cls + ".cols").toLowerCase().split(",");
     }
 
     public static String[] getType(String cls) {
-        return conf.getString("database.been." + cls + ".type").toLowerCase().split(",");
+        return conf.getString("database.table." + cls + ".type").toLowerCase().split(",");
     }
 }

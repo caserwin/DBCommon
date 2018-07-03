@@ -14,7 +14,16 @@ public class PhoenixService {
         typeMap.put("float", "FLOAT");
     }
 
-    public static HashMap<String, String> getTypeMap(){
+    public static HashMap<String, String> getTypeMap() {
         return typeMap;
+    }
+
+    public static boolean isPrimaryKey(String[] pkArray, String col) {
+        for (String pk : pkArray) {
+            if (col.toLowerCase().equals(pk.toLowerCase())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

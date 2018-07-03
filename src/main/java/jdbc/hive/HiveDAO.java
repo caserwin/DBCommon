@@ -1,5 +1,6 @@
 package jdbc.hive;
 
+import jdbc.DBOperate;
 import jdbc.conn.DBConnection;
 import jdbc.service.FileUtil;
 import jdbc.service.ReflectionService;
@@ -12,9 +13,9 @@ import java.util.stream.Collectors;
 /**
  * @author yidxue
  */
-public class HiveDAO {
+public class HiveDAO implements DBOperate<Object>{
 
-    private String URLHIVE = "jdbc:hive2://10.29.42.49:10000/default";
+    private String URLHIVE = "jdbc:hive2://localhost:10000/default";
     private String DBType = "hive";
     private Connection conn;
 
@@ -22,6 +23,7 @@ public class HiveDAO {
         this.conn = DBConnection.getConnection(DBType, URLHIVE);
     }
 
+    @Override
     public <T> void create(String tablename, Class<T> clazz) {
         try {
             HashMap<String, String> colAndType = ReflectionService.getColAndType(clazz);
@@ -38,6 +40,16 @@ public class HiveDAO {
         }
     }
 
+    @Override
+    public <T> void insert(String tablename, Class<T> clazz, ArrayList<Object> record) {
+
+    }
+
+    @Override
+    public <T> void select(String tablename, Class<T> clazz) {
+
+    }
+
     public <T> void loadToHive(ArrayList<T> records, Class<T> clazz, String tableName, String path) {
         try {
             FileUtil.writeByStream(records.stream().map(x -> ReflectionService.getValues(x, clazz).stream().collect(Collectors.joining("\t"))).collect(Collectors.toList()), path);
@@ -51,4 +63,6 @@ public class HiveDAO {
             e.printStackTrace();
         }
     }
+
+
 }
