@@ -3,6 +3,8 @@ package jdbc.app;
 import jdbc.common.BaseRecord;
 import jdbc.common.tuple.Tuple3;
 import jdbc.hive.HiveDAO;
+import jdbc.mysql.MysqlDAO;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
@@ -37,17 +39,16 @@ public class PersonRecord extends BaseRecord {
         String path = args[1];
 
         HiveDAO hiveDAO = new HiveDAO();
-        // create table
-        hiveDAO.create(table, PersonRecord.class);
-
-        // load data
         ArrayList<PersonRecord> records = new ArrayList<>();
         records.add(new PersonRecord().buildFields("1", "erwin1", "19", "male"));
         records.add(new PersonRecord().buildFields("2", "erwin2", "29", "male"));
         records.add(new PersonRecord().buildFields("3", "erwin3", "25", "female"));
-        hiveDAO.loadToHive(records, PersonRecord.class, table, path);
 
-        // select data
+        // 创建表
+        hiveDAO.create(table, PersonRecord.class);
+        // 插入表
+        hiveDAO.loadToHive(records, PersonRecord.class, table, path);
+        // 查询表
         ArrayList<Tuple3<String, String, String>> conds = new ArrayList<>();
         conds.add(new Tuple3("name", "like", "erwin%"));
         conds.add(new Tuple3("id", "in", "(1,2)"));
@@ -56,5 +57,14 @@ public class PersonRecord extends BaseRecord {
         for (PersonRecord ps : personRecords) {
             System.out.println(ps);
         }
+
+
+        MysqlDAO mysqlDAO = new MysqlDAO();
+        // 创建表
+        mysqlDAO.create("table1", PersonRecord.class);
+        // 插入表
+        mysqlDAO.insert("table1", PersonRecord.class, records);
+        // 查询表
+
     }
 }

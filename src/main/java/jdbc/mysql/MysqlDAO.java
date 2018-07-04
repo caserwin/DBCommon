@@ -32,22 +32,6 @@ public class MysqlDAO implements DBOperate<Object> {
         this.conn = DBConnection.getConnection(DBType, URLMYSQL, username, password);
     }
 
-
-    public static void main(String[] args) {
-        MysqlDAO mysqlDAO = new MysqlDAO();
-        // 创建表
-        mysqlDAO.create("table1", PersonRecord.class);
-
-        // 插入表
-        ArrayList<PersonRecord> records = new ArrayList<>();
-        records.add(new PersonRecord().buildFields("1", "erwin1", "19", "male"));
-        records.add(new PersonRecord().buildFields("2", "erwin2", "29", "male"));
-        records.add(new PersonRecord().buildFields("3", "erwin3", "25", "female"));
-        mysqlDAO.insert("table1", PersonRecord.class, records);
-
-        // 查询表
-    }
-
     @Override
     public <T> void create(String tablename, Class<T> clazz) {
         HashMap<String, String> colAndType = ReflectionUtil.getColAndType(clazz);
