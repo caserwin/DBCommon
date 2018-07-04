@@ -51,6 +51,11 @@ public class HiveDAO implements DBOperate<Object> {
     }
 
     @Override
+    public <T> void update(String tablename, Class<T> clazz, String[] cols, ArrayList<Tuple3<String, String, String>> cond) {
+
+    }
+
+    @Override
     public <T> ArrayList<T> select(String tablename, Class<T> clazz, String[] cols, ArrayList<Tuple3<String, String, String>> conds) {
         ArrayList<T> recordLS = new ArrayList<>();
         String fields = Stream.of(cols).collect(Collectors.joining(","));

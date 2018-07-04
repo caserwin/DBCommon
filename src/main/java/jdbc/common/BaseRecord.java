@@ -34,9 +34,8 @@ public abstract class BaseRecord {
         this.colAndValue = colAndValue;
     }
 
-
-    public static String[] getPrimaryKey(String cls) {
-        return URLConstant.getPrimaryKey(cls);
+    public static String[] getPrimaryKeys(String cls) {
+        return URLConstant.getPrimaryKeys(cls);
     }
 
     public static String[] getCols(String cls) {
@@ -44,18 +43,44 @@ public abstract class BaseRecord {
     }
 
     public static String[] getTypes(String cls) {
-        return URLConstant.getType(cls);
+        return URLConstant.getTypes(cls);
+    }
+
+    public static String[] getComments(String cls) {
+        return URLConstant.getComments(cls);
     }
 
     public static HashMap<String, String> getColAndType(String cls) {
         LinkedHashMap<String, String> colAndType = new LinkedHashMap<>();
         String[] cols = getCols(cls);
         String[] types = getTypes(cls);
+        if (cols.length!=types.length){
+            System.err.println("column length not match with type length !!");
+            return colAndType;
+        }
         for (int i = 0; i < cols.length; i++) {
             colAndType.put(cols[i], types[i]);
         }
         return colAndType;
     }
+
+    public static HashMap<String, String> getColAndComment(String cls) {
+        LinkedHashMap<String, String> colAndComment = new LinkedHashMap<>();
+        String[] cols = getCols(cls);
+        String[] comments = getComments(cls);
+        if (comments == null){
+            return colAndComment;
+        }
+        if (cols.length!=comments.length){
+            System.err.println("column length not match with comment length !!");
+            return colAndComment;
+        }
+        for (int i = 0; i < cols.length; i++) {
+            colAndComment.put(cols[i], comments[i]);
+        }
+        return colAndComment;
+    }
+
 
     public ArrayList<String> getValues() {
         return new ArrayList<>(colAndValue.values());
@@ -66,4 +91,3 @@ public abstract class BaseRecord {
         return colAndValue.values().stream().collect(Collectors.joining("\t"));
     }
 }
-

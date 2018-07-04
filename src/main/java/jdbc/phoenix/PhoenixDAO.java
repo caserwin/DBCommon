@@ -83,6 +83,11 @@ public class PhoenixDAO implements DBOperate<Object> {
         return null;
     }
 
+    @Override
+    public <T> void update(String tablename, Class<T> clazz, String[] cols, ArrayList<Tuple3<String, String, String>> cond) {
+
+    }
+
 
     public static void main(String[] args) {
         PhoenixDAO phoenixDAO = new PhoenixDAO();

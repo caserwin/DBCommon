@@ -28,7 +28,7 @@ public class ReflectionUtil {
         String[] primaryKey = null;
         try {
             String cls = clazz.getField("cls").get(clazz).toString();
-            Method m2 = clazz.getMethod("getPrimaryKey", String.class);
+            Method m2 = clazz.getMethod("getPrimaryKeys", String.class);
             primaryKey = (String[]) m2.invoke(null, cls);
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
@@ -48,6 +48,18 @@ public class ReflectionUtil {
         return types;
     }
 
+    public static <T> String[] getComments(Class<T> clazz) {
+        String[] comments = null;
+        try {
+            String cls = clazz.getField("cls").get(clazz).toString();
+            Method m2 = clazz.getMethod("getComments", String.class);
+            comments = (String[]) m2.invoke(null, cls);
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+        return comments;
+    }
+
     public static <T> HashMap<String, String> getColAndType(Class<T> clazz) {
         HashMap<String, String> colAndType = null;
         try {
@@ -58,6 +70,18 @@ public class ReflectionUtil {
             e.printStackTrace();
         }
         return colAndType;
+    }
+
+    public static <T> HashMap<String, String> getColAndComment(Class<T> clazz) {
+        HashMap<String, String> colAndComment = null;
+        try {
+            String cls = clazz.getField("cls").get(clazz).toString();
+            Method m = clazz.getMethod("getColAndComment", String.class);
+            colAndComment = (HashMap<String, String>) m.invoke(null, cls);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+        return colAndComment;
     }
 
     public static <T> HashMap<String, String> getColAndValue(Object obj, Class<T> clazz) {

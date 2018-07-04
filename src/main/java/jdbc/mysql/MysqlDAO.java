@@ -1,22 +1,30 @@
 package jdbc.mysql;
 
+import jdbc.app.PersonRecord;
+import jdbc.common.DBOperate;
+import jdbc.common.ReflectionUtil;
+import jdbc.common.Tuple3;
 import jdbc.conn.DBConnection;
+import jdbc.phoenix.PhoenixService;
 import org.apache.commons.lang.StringUtils;
+
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
  * Created by yidxue on 2018/6/30
  */
-public class MysqlDAO {
+public class MysqlDAO implements DBOperate<Object> {
 
-    private String URLMYSQL = "jdbc:mysql://xxx:3306/dbname";
-    private String username = "";
+    private String URLMYSQL = "jdbc:mysql://localhost:3306/test";
+    private String username = "root";
     private String password = "";
     private String DBType = "mysql";
     private Connection conn;
@@ -37,14 +45,14 @@ public class MysqlDAO {
             String valueNUM = StringUtils.repeat("?,", cols.length);
             String sql = "INSERT INTO " + tableName + " (" + fields + ") VALUES(" + valueNUM.substring(0, valueNUM.length() - 1) + ")";
 
-            conn.setAutoCommit(false);
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+//            conn.setAutoCommit(false);
+//            PreparedStatement pstmt = conn.prepareStatement(sql);
 
             for (int i = 0; i < records.size(); i++) {
                 for (int j = 0; j < cols.length; j++) {
 
                 }
-                pstmt.addBatch();
+//                pstmt.addBatch();
             }
 
 //            for (StudentClsHour record : records) {
@@ -63,19 +71,67 @@ public class MysqlDAO {
 //                pstmt.addBatch();
 //            }
 
-            pstmt.executeBatch();
-            conn.commit();
-            conn.close();
+//            pstmt.executeBatch();
+//            conn.commit();
+//            conn.close();
 
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             System.out.println("get attribute error !!");
             e.printStackTrace();
+//        } catch (SQLException e) {
+//            System.out.println("get sql error !!");
+//            e.printStackTrace();
+        }
+    }
+
+
+    public static void main(String[] args) {
+        MysqlDAO mysqlDAO = new MysqlDAO();
+        mysqlDAO.create("table", PersonRecord.class);
+    }
+
+    @Override
+    public <T> void create(String tablename, Class<T> clazz) {
+        HashMap<String, String> colAndType = ReflectionUtil.getColAndType(clazz);
+        HashMap<String, String> colAndComment = ReflectionUtil.getColAndComment(clazz);
+
+        HashMap<String, String> typeMap = MysqlService.getTypeMap();
+        String[] comments = ReflectionUtil.getComments(clazz);
+        String[] pkArray = ReflectionUtil.getPrimaryKey(clazz);
+        String fields = colAndType.entrySet().stream().map(x -> {
+            if (MysqlService.isPrimaryKey(pkArray, x.getKey())) {
+                return "`" + x.getKey() + "` " + typeMap.get(x.getValue()) + " NOT NULL";
+            } else {
+                return "`" + x.getKey() + "` " + typeMap.get(x.getValue());
+            }
+        }).collect(Collectors.joining(","));
+
+        String primaryKey = Stream.of(pkArray).map(x -> "`" + x + "`").collect(Collectors.joining(","));
+        String sql = "CREATE TABLE `" + tablename + "` (" + fields + ", PRIMARY KEY (" + primaryKey + ")) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+
+        System.out.println(sql);
+        try {
+            Statement stmt = this.conn.createStatement();
+            stmt.execute(sql);
         } catch (SQLException e) {
-            System.out.println("get sql error !!");
             e.printStackTrace();
         }
     }
 
+    @Override
+    public <T> void insert(String tablename, Class<T> clazz, ArrayList<Object> record) {
+
+    }
+
+    @Override
+    public <T> ArrayList<T> select(String tablename, Class<T> clazz, String[] cols, ArrayList<Tuple3<String, String, String>> cond) {
+        return null;
+    }
+
+    @Override
+    public <T> void update(String tablename, Class<T> clazz, String[] cols, ArrayList<Tuple3<String, String, String>> cond) {
+
+    }
 
 //    @Override
 //    public void insert(String tablename, ArrayList records) {
