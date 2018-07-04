@@ -2,9 +2,10 @@ package jdbc.phoenix;
 
 import jdbc.common.DBOperate;
 import jdbc.common.ReflectionUtil;
+import jdbc.common.SQLUtil;
 import jdbc.common.tuple.Tuple2;
 import jdbc.common.tuple.Tuple3;
-import jdbc.conn.DBConnection;
+import jdbc.common.conn.DBConnection;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -26,7 +27,7 @@ public class PhoenixDAO implements DBOperate<Object> {
     private String COL_FAMLIY = "info";
 
     public PhoenixDAO() {
-        this.conn = DBConnection.getConnection(DBType, URLPHOENIX);
+        this.conn = new DBConnection().getConnection(DBType, URLPHOENIX);
     }
 
     @Override
@@ -56,13 +57,15 @@ public class PhoenixDAO implements DBOperate<Object> {
     }
 
     @Override
-    public <T> void insert(String tablename, Class<T> clazz, ArrayList<T> records) {
+    public <T> ArrayList<T> select(String tablename, Class<T> clazz, String[] cols, ArrayList<Tuple3<String, String, String>> conds) {
+        return SQLUtil.select(this.conn, tablename, clazz, cols, conds);
     }
 
     @Override
-    public <T> ArrayList<T> select(String tablename, Class<T> clazz, String[] cols, ArrayList<Tuple3<String, String, String>> cond) {
-        return null;
+    public <T> void insert(String tablename, Class<T> clazz, ArrayList<T> records) {
     }
+
+
 
     @Override
     public <T> void update(String tablename, Class<T> clazz, ArrayList<Tuple2<String, String>> cols, ArrayList<Tuple3<String, String, String>> cond) {

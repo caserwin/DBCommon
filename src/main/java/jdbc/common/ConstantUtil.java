@@ -7,7 +7,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * Created by yidxue on 2018/6/28
  */
-public class URLConstant {
+public class ConstantUtil {
     private static Config conf = ConfigFactory.load();
 
     public static final String PHOENIX_DRIVER = "org.apache.phoenix.jdbc.PhoenixDriver";

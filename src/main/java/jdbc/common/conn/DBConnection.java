@@ -1,6 +1,6 @@
-package jdbc.conn;
+package jdbc.common.conn;
 
-import jdbc.common.URLConstant;
+import jdbc.common.ConstantUtil;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,9 +11,9 @@ import java.sql.SQLException;
  */
 public class DBConnection {
 
-    private static Connection conn = null;
+    private Connection conn = null;
 
-    public static Connection getConnection(String type, String url) {
+    public Connection getConnection(String type, String url) {
         if (null == conn) {
             synchronized (DBConnection.class) {
                 if (null == conn) {
@@ -30,7 +30,7 @@ public class DBConnection {
     }
 
 
-    public static Connection getConnection(String type, String url, String username, String password) {
+    public Connection getConnection(String type, String url, String username, String password) {
         if (null == conn) {
             synchronized (DBConnection.class) {
                 if (null == conn) {
@@ -47,16 +47,16 @@ public class DBConnection {
     }
 
 
-    private static String getDBDriver(String type) {
+    private String getDBDriver(String type) {
         switch (type.toLowerCase()) {
             case "hive":
-                return URLConstant.HIVE_DRIVER;
+                return ConstantUtil.HIVE_DRIVER;
             case "mysql":
-                return URLConstant.MYSQL_DRIVER;
+                return ConstantUtil.MYSQL_DRIVER;
             case "phoenix":
-                return URLConstant.PHOENIX_DRIVER;
+                return ConstantUtil.PHOENIX_DRIVER;
             default:
-                return URLConstant.MYSQL_DRIVER;
+                return ConstantUtil.MYSQL_DRIVER;
         }
     }
 }

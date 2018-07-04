@@ -1,11 +1,11 @@
 package jdbc.mysql;
 
-import jdbc.app.PersonRecord;
 import jdbc.common.DBOperate;
 import jdbc.common.ReflectionUtil;
+import jdbc.common.SQLUtil;
 import jdbc.common.tuple.Tuple2;
 import jdbc.common.tuple.Tuple3;
-import jdbc.conn.DBConnection;
+import jdbc.common.conn.DBConnection;
 import org.apache.commons.lang.StringUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,7 +29,7 @@ public class MysqlDAO implements DBOperate<Object> {
     private Connection conn;
 
     public MysqlDAO() {
-        this.conn = DBConnection.getConnection(DBType, URLMYSQL, username, password);
+        this.conn = new DBConnection().getConnection(DBType, URLMYSQL, username, password);
     }
 
     @Override
@@ -56,7 +56,8 @@ public class MysqlDAO implements DBOperate<Object> {
         }).collect(Collectors.joining(","));
 
         String primaryKey = Stream.of(pkArray).map(x -> "`" + x + "`").collect(Collectors.joining(","));
-        String sql = "CREATE TABLE `" + tablename + "` (" + fields + ", PRIMARY KEY (" + primaryKey + ")) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+        String sql = "CREATE TABLE IF NOT EXISTS `" + tablename + "` (" + fields + ", PRIMARY KEY (" + primaryKey + ")) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+        System.out.println(sql);
         try {
             Statement stmt = this.conn.createStatement();
             stmt.execute(sql);
@@ -76,7 +77,7 @@ public class MysqlDAO implements DBOperate<Object> {
 
         String fields = Stream.of(cols).map(x -> "`" + x + "`").collect(Collectors.joining(","));
         String valueNUM = StringUtils.repeat("?,", cols.length);
-        String sql = "INSERT INTO `" + tablename + "` (" + fields + ") VALUES(" + valueNUM.substring(0, valueNUM.length() - 1) + ")";
+        String sql = "INSERT INTO `" + tablename + "` (" + fields + ") VALUES(" + valueNUM.substring(0, valueNUM.length() - 1) + ");";
         System.out.println(sql);
         try {
             this.conn.setAutoCommit(false);
@@ -96,8 +97,8 @@ public class MysqlDAO implements DBOperate<Object> {
     }
 
     @Override
-    public <T> ArrayList<T> select(String tablename, Class<T> clazz, String[] cols, ArrayList<Tuple3<String, String, String>> cond) {
-        return null;
+    public <T> ArrayList<T> select(String tablename, Class<T> clazz, String[] cols, ArrayList<Tuple3<String, String, String>> conds) {
+        return SQLUtil.select(this.conn, tablename, clazz, cols, conds);
     }
 
     @Override

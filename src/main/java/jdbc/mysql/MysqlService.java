@@ -12,7 +12,7 @@ public class MysqlService {
 
     static {
         typeMap.put("int", "int(11)");
-        typeMap.put("string", "char(255)");
+        typeMap.put("string", "varchar(255)");
         typeMap.put("float", "float(6,2)");
     }
 

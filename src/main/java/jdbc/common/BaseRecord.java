@@ -35,19 +35,19 @@ public abstract class BaseRecord {
     }
 
     public static String[] getPrimaryKeys(String cls) {
-        return URLConstant.getPrimaryKeys(cls);
+        return ConstantUtil.getPrimaryKeys(cls);
     }
 
     public static String[] getCols(String cls) {
-        return URLConstant.getCols(cls);
+        return ConstantUtil.getCols(cls);
     }
 
     public static String[] getTypes(String cls) {
-        return URLConstant.getTypes(cls);
+        return ConstantUtil.getTypes(cls);
     }
 
     public static String[] getComments(String cls) {
-        return URLConstant.getComments(cls);
+        return ConstantUtil.getComments(cls);
     }
 
     public static HashMap<String, String> getColAndType(String cls) {
