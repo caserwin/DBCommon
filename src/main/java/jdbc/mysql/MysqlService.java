@@ -1,5 +1,7 @@
 package jdbc.mysql;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.HashMap;
 
 /**
@@ -25,5 +27,21 @@ public class MysqlService {
             }
         }
         return false;
+    }
+
+    public static void setPSTMT(PreparedStatement pstmt, int index, String type, String value) throws SQLException {
+        switch (type) {
+            case "string":
+                pstmt.setString(index, value);
+                break;
+            case "int":
+                pstmt.setInt(index, Integer.valueOf(value));
+                break;
+            case "float":
+                pstmt.setFloat(index, Float.valueOf(value));
+                break;
+            default:
+                break;
+        }
     }
 }

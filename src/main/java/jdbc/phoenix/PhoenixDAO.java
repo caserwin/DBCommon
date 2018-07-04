@@ -15,7 +15,6 @@ import java.util.stream.Stream;
 
 /**
  * Created by yidxue on 2018/6/28
- * https://my.vertica.com/docs/8.1.x/HTML/index.htm#Authoring/ConnectingToVertica/ClientJDBC/BatchInsertsUsingJDBCPreparedStatements.htm
  */
 public class PhoenixDAO implements DBOperate<Object> {
 
