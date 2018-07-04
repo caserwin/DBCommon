@@ -3,14 +3,12 @@ package jdbc.mysql;
 import jdbc.app.PersonRecord;
 import jdbc.common.DBOperate;
 import jdbc.common.ReflectionUtil;
-import jdbc.common.Tuple3;
+import jdbc.common.tuple.Tuple2;
+import jdbc.common.tuple.Tuple3;
 import jdbc.conn.DBConnection;
-import jdbc.phoenix.PhoenixService;
 import org.apache.commons.lang.StringUtils;
-
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -33,61 +31,15 @@ public class MysqlDAO implements DBOperate<Object> {
         this.conn = DBConnection.getConnection(DBType, URLMYSQL, username, password);
     }
 
-    public <T> void insert(ArrayList<T> records, Class<T> clazz, String tableName) {
-        if (records.size() == 0) {
-            System.out.println("record is null !!");
-            return;
-        }
-
-        try {
-            String[] cols = (String[]) clazz.getMethod("getAttributes").invoke(null);
-            String fields = Stream.of(cols).map(x -> x.split("\\s+")[0]).collect(Collectors.joining(","));
-            String valueNUM = StringUtils.repeat("?,", cols.length);
-            String sql = "INSERT INTO " + tableName + " (" + fields + ") VALUES(" + valueNUM.substring(0, valueNUM.length() - 1) + ")";
-
-//            conn.setAutoCommit(false);
-//            PreparedStatement pstmt = conn.prepareStatement(sql);
-
-            for (int i = 0; i < records.size(); i++) {
-                for (int j = 0; j < cols.length; j++) {
-
-                }
-//                pstmt.addBatch();
-            }
-
-//            for (StudentClsHour record : records) {
-//                pstmt.set(1, record.getSid());
-//                pstmt.setInt(2, record.getCls_type());
-//                pstmt.setInt(3, record.getCls_hour());
-//                pstmt.setInt(4, record.getCreate_time());
-//                pstmt.setInt(5, record.getExpire_time());
-//                pstmt.setInt(6, record.getFor_free());
-//                pstmt.setInt(7, record.getOrder_id());
-//                pstmt.setInt(8, record.getUse_level());
-//                pstmt.setInt(9, record.getCls_hour_bak());
-//                pstmt.setInt(10, record.getCls_type_bak());
-//                pstmt.setInt(11, record.getExpire_time_bak());
-//
-//                pstmt.addBatch();
-//            }
-
-//            pstmt.executeBatch();
-//            conn.commit();
-//            conn.close();
-
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            System.out.println("get attribute error !!");
-            e.printStackTrace();
-//        } catch (SQLException e) {
-//            System.out.println("get sql error !!");
-//            e.printStackTrace();
-        }
-    }
-
 
     public static void main(String[] args) {
         MysqlDAO mysqlDAO = new MysqlDAO();
-        mysqlDAO.create("table", PersonRecord.class);
+//        mysqlDAO.create("table", PersonRecord.class);
+        ArrayList<PersonRecord> records = new ArrayList<>();
+        records.add(new PersonRecord().buildFields("1", "erwin1", "19", "male"));
+        records.add(new PersonRecord().buildFields("2", "erwin2", "29", "male"));
+        records.add(new PersonRecord().buildFields("3", "erwin3", "25", "female"));
+        mysqlDAO.insert("ttt", PersonRecord.class, records);
     }
 
     @Override
@@ -96,20 +48,25 @@ public class MysqlDAO implements DBOperate<Object> {
         HashMap<String, String> colAndComment = ReflectionUtil.getColAndComment(clazz);
 
         HashMap<String, String> typeMap = MysqlService.getTypeMap();
-        String[] comments = ReflectionUtil.getComments(clazz);
         String[] pkArray = ReflectionUtil.getPrimaryKey(clazz);
         String fields = colAndType.entrySet().stream().map(x -> {
             if (MysqlService.isPrimaryKey(pkArray, x.getKey())) {
-                return "`" + x.getKey() + "` " + typeMap.get(x.getValue()) + " NOT NULL";
+                if (colAndComment.size() == 0) {
+                    return "`" + x.getKey() + "` " + typeMap.get(x.getValue()) + " NOT NULL";
+                } else {
+                    return "`" + x.getKey() + "` " + typeMap.get(x.getValue()) + " NOT NULL COMMENT '" + colAndComment.get(x.getKey()) + "'";
+                }
             } else {
-                return "`" + x.getKey() + "` " + typeMap.get(x.getValue());
+                if (colAndComment.size() == 0) {
+                    return "`" + x.getKey() + "` " + typeMap.get(x.getValue()) + " NOT NULL";
+                } else {
+                    return "`" + x.getKey() + "` " + typeMap.get(x.getValue()) + " NOT NULL COMMENT '" + colAndComment.get(x.getKey()) + "'";
+                }
             }
         }).collect(Collectors.joining(","));
 
         String primaryKey = Stream.of(pkArray).map(x -> "`" + x + "`").collect(Collectors.joining(","));
         String sql = "CREATE TABLE `" + tablename + "` (" + fields + ", PRIMARY KEY (" + primaryKey + ")) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
-
-        System.out.println(sql);
         try {
             Statement stmt = this.conn.createStatement();
             stmt.execute(sql);
@@ -119,8 +76,21 @@ public class MysqlDAO implements DBOperate<Object> {
     }
 
     @Override
-    public <T> void insert(String tablename, Class<T> clazz, ArrayList<Object> record) {
-
+    public <T> void insert(String tablename, Class<T> clazz, ArrayList<T> records) {
+        if (records.size() == 0) {
+            System.out.println("record is null !!");
+            return;
+        }
+        try {
+            String[] cols = (String[]) clazz.getMethod("getCols").invoke(null);
+            String fields = Stream.of(cols).collect(Collectors.joining(","));
+            String valueNUM = StringUtils.repeat("?,", cols.length);
+            String sql = "INSERT INTO " + tablename + " (" + fields + ") VALUES(" + valueNUM.substring(0, valueNUM.length() - 1) + ")";
+            System.out.println(sql);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            System.out.println("get attribute error !!");
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -129,7 +99,7 @@ public class MysqlDAO implements DBOperate<Object> {
     }
 
     @Override
-    public <T> void update(String tablename, Class<T> clazz, String[] cols, ArrayList<Tuple3<String, String, String>> cond) {
+    public <T> void update(String tablename, Class<T> clazz, ArrayList<Tuple2<String, String>> cols, ArrayList<Tuple3<String, String, String>> cond) {
 
     }
 

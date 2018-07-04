@@ -1,7 +1,7 @@
 package jdbc.app;
 
 import jdbc.common.BaseRecord;
-import jdbc.common.Tuple3;
+import jdbc.common.tuple.Tuple3;
 import jdbc.hive.HiveDAO;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -39,12 +39,12 @@ public class PersonRecord extends BaseRecord {
         HiveDAO hiveDAO = new HiveDAO();
         // create table
         hiveDAO.create(table, PersonRecord.class);
+
+        // load data
         ArrayList<PersonRecord> records = new ArrayList<>();
         records.add(new PersonRecord().buildFields("1", "erwin1", "19", "male"));
         records.add(new PersonRecord().buildFields("2", "erwin2", "29", "male"));
         records.add(new PersonRecord().buildFields("3", "erwin3", "25", "female"));
-
-        // load data
         hiveDAO.loadToHive(records, PersonRecord.class, table, path);
 
         // select data

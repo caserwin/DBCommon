@@ -1,10 +1,10 @@
 package jdbc.phoenix;
 
 import jdbc.common.DBOperate;
-import jdbc.app.PersonRecord;
-import jdbc.common.Tuple3;
-import jdbc.conn.DBConnection;
 import jdbc.common.ReflectionUtil;
+import jdbc.common.tuple.Tuple2;
+import jdbc.common.tuple.Tuple3;
+import jdbc.conn.DBConnection;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -57,25 +57,7 @@ public class PhoenixDAO implements DBOperate<Object> {
     }
 
     @Override
-    public <T> void insert(String tablename, Class<T> clazz, ArrayList<Object> record) {
-//        int num = cols.size();
-//        try {
-//            this.conn.setAutoCommit(false);
-//            String fields = cols.stream().collect(Collectors.joining(","));
-//            String valueNUM = StringUtils.repeat("?,", num);
-//            String sql = "INSERT INTO " + tablename + "(" + fields + ") VALUES(" + valueNUM.substring(0, valueNUM.length() - 1) + ")";
-//            PreparedStatement pstmt = conn.prepareStatement(sql);
-//            for (String[] row : rows) {
-//                for (int i = 0; i < num; i++) {
-//                    pstmt.setString(i, row[i]);
-//                }
-//                pstmt.addBatch();
-//            }
-//            pstmt.executeBatch();
-//            conn.commit();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+    public <T> void insert(String tablename, Class<T> clazz, ArrayList<T> records) {
     }
 
     @Override
@@ -84,15 +66,7 @@ public class PhoenixDAO implements DBOperate<Object> {
     }
 
     @Override
-    public <T> void update(String tablename, Class<T> clazz, String[] cols, ArrayList<Tuple3<String, String, String>> cond) {
-
-    }
-
-
-    public static void main(String[] args) {
-        PhoenixDAO phoenixDAO = new PhoenixDAO();
-        phoenixDAO.create("ttt", PersonRecord.class);
-
+    public <T> void update(String tablename, Class<T> clazz, ArrayList<Tuple2<String, String>> cols, ArrayList<Tuple3<String, String, String>> cond) {
 
     }
 }

@@ -1,4 +1,4 @@
-package jdbc.common;
+package jdbc.common.tuple;
 
 /**
  * Created by yidxue on 2018/7/3

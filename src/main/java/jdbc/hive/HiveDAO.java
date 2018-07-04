@@ -3,7 +3,8 @@ package jdbc.hive;
 import jdbc.common.DBOperate;
 import jdbc.common.FileUtil;
 import jdbc.common.ReflectionUtil;
-import jdbc.common.Tuple3;
+import jdbc.common.tuple.Tuple2;
+import jdbc.common.tuple.Tuple3;
 import jdbc.conn.DBConnection;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -46,12 +47,7 @@ public class HiveDAO implements DBOperate<Object> {
     }
 
     @Override
-    public <T> void insert(String tablename, Class<T> clazz, ArrayList<Object> record) {
-
-    }
-
-    @Override
-    public <T> void update(String tablename, Class<T> clazz, String[] cols, ArrayList<Tuple3<String, String, String>> cond) {
+    public <T> void insert(String tablename, Class<T> clazz, ArrayList<T> record) {
 
     }
 
@@ -88,6 +84,12 @@ public class HiveDAO implements DBOperate<Object> {
         }
         return recordLS;
     }
+
+    @Override
+    public <T> void update(String tablename, Class<T> clazz, ArrayList<Tuple2<String, String>> cols, ArrayList<Tuple3<String, String, String>> cond) {
+
+    }
+
 
     public <T> void loadToHive(ArrayList<T> records, Class<T> clazz, String tableName, String path) {
         try {

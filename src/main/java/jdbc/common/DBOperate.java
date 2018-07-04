@@ -1,5 +1,8 @@
 package jdbc.common;
 
+import jdbc.common.tuple.Tuple2;
+import jdbc.common.tuple.Tuple3;
+
 import java.util.ArrayList;
 
 /**
@@ -14,7 +17,7 @@ public interface DBOperate<T> {
     /**
      * 插入数据
      */
-    <T> void insert(String tablename, Class<T> clazz, ArrayList<Object> record);
+    <T> void insert(String tablename, Class<T> clazz, ArrayList<T> records);
 
     /**
      * 查询数据
@@ -24,5 +27,5 @@ public interface DBOperate<T> {
     /**
      * 更新数据
      */
-    <T> void update(String tablename, Class<T> clazz, String[] cols, ArrayList<Tuple3<String, String, String>> cond);
+    <T> void update(String tablename, Class<T> clazz, ArrayList<Tuple2<String, String>>  cols, ArrayList<Tuple3<String, String, String>> cond);
 }
