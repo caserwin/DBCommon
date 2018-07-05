@@ -73,4 +73,4 @@ Caused by: java.lang.RuntimeException: org.apache.hadoop.hive.ql.parse.SemanticE
 
 ## 结果
 HiveTestAPP 执行结果如下展示：
-<div align=left><img width="1200" height="220" src="https://github.com/caserwin/DBCommon/raw/master/pic/DBCommon_demo5.png"/></div>
+<div align=left><img width="1200" height="160" src="https://github.com/caserwin/DBCommon/raw/master/pic/DBCommon_demo5.png"/></div>
