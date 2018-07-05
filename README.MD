@@ -71,7 +71,7 @@ public static void main(String[] args) {
 ```
 CREATE TABLE IF NOT EXISTS `person` (`id` int(11) NOT NULL COMMENT '身份证',`name` varchar(255) NOT NULL COMMENT '姓名',`age` int(11) NOT NULL COMMENT '年龄',`gender` varchar(255) NOT NULL COMMENT '性别', PRIMARY KEY (`id`,`name`)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ```
-<div align=center><img width="900" height="250" src="https://github.com/caserwin/DBCommon/raw/master/pic/DBCommon_demo1.png"/></div>
+<div align=center><img width="900" height="320" src="https://github.com/caserwin/DBCommon/raw/master/pic/DBCommon_demo1.png"/></div>
 
 
 ### 3.4 插入表
@@ -93,7 +93,7 @@ PreparedStatement 对应的sql如下：
 ```
 INSERT INTO `person` (`id`,`name`,`age`,`gender`) VALUES(?,?,?,?);
 ```
-<div align=center><img width="900" height="250" src="https://github.com/caserwin/DBCommon/raw/master/pic/DBCommon_demo2.png"/></div>
+<div align=center><img width="900" height="220" src="https://github.com/caserwin/DBCommon/raw/master/pic/DBCommon_demo2.png"/></div>
 
 ### 3.5 查询表
 ```
@@ -115,7 +115,7 @@ public static void main(String[] args) {
 ```
 SELECT id,name FROM person where name like 'erwin%'
 ```
-<div align=center><img width="900" height="250" src="https://github.com/caserwin/DBCommon/raw/master/pic/DBCommon_demo3.png"/></div>
+<div align=center><img width="1000" height="200" src="https://github.com/caserwin/DBCommon/raw/master/pic/DBCommon_demo3.png"/></div>
 
 ### 3.6 更新表
 ```
@@ -137,7 +137,7 @@ public static void main(String[] args) {
 ```
 UPDATE person SET name = 'caroline',age = 26 where gender = 'female'
 ```
-<div align=center><img width="900" height="250" src="https://github.com/caserwin/DBCommon/raw/master/pic/DBCommon_demo4.png"/></div>
+<div align=center><img width="900" height="220" src="https://github.com/caserwin/DBCommon/raw/master/pic/DBCommon_demo4.png"/></div>
 
 
 ### 3.7 删除表
