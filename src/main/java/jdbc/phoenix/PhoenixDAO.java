@@ -1,5 +1,6 @@
 package jdbc.phoenix;
 
+import jdbc.common.BaseRecord;
 import jdbc.common.DBOperate;
 import jdbc.common.ReflectionUtil;
 import jdbc.common.SQLUtil;
@@ -62,7 +63,7 @@ public class PhoenixDAO implements DBOperate<Object> {
     }
 
     @Override
-    public <T> void insert(String tablename, Class<T> clazz, ArrayList<T> records) {
+    public <T> void insert(String tablename, Class<T> clazz, ArrayList<BaseRecord> records) {
     }
 
 

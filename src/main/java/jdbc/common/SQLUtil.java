@@ -1,6 +1,7 @@
 package jdbc.common;
 
 import jdbc.common.tuple.Tuple3;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,7 +25,7 @@ public class SQLUtil {
         if (conds != null && conds.size() != 0) {
             String condStr = conds.stream().map(x -> {
                 if ("string".equals(colAndType.get(x.column.toLowerCase()).toLowerCase())) {
-                    return x.column + " " + x.operator + " " + "'" + x.value + "'";
+                    return x.column + " " + x.operator + " " + getStrInCheck(x.operator, x.value);
                 } else {
                     return x.column + " " + x.operator + " " + x.value;
                 }
@@ -47,5 +48,13 @@ public class SQLUtil {
             e.printStackTrace();
         }
         return recordLS;
+    }
+
+    private static String getStrInCheck(String operator, String value) {
+        if ("in".equals(operator.toLowerCase())) {
+            return value;
+        } else {
+            return "'" + value + "'";
+        }
     }
 }

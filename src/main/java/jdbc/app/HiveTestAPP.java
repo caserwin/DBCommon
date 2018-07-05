@@ -1,5 +1,7 @@
 package jdbc.app;
 
+import jdbc.app.record.PersonRecord;
+import jdbc.common.BaseRecord;
 import jdbc.common.tuple.Tuple3;
 import jdbc.hive.HiveDAO;
 import java.util.ArrayList;
@@ -17,7 +19,7 @@ public class HiveTestAPP {
         String path = args[1];
 
         HiveDAO hiveDAO = new HiveDAO();
-        ArrayList<PersonRecord> records = new ArrayList<>();
+        ArrayList<BaseRecord> records = new ArrayList<>();
         records.add(new PersonRecord().buildFields("2", "erwin1", "19", "male"));
         records.add(new PersonRecord().buildFields("3", "erwin2", "29", "male"));
         records.add(new PersonRecord().buildFields("4", "erwin3", "25", "female"));

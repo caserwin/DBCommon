@@ -1,4 +1,4 @@
-package jdbc.app;
+package jdbc.app.record;
 
 import jdbc.common.BaseRecord;
 import java.util.LinkedHashMap;
@@ -11,7 +11,7 @@ public class PersonRecord extends BaseRecord {
     public static String cls = "person";
 
     @Override
-    public PersonRecord buildFields(String... args) {
+    public BaseRecord buildFields(String... args) {
         super.setColAndValue("id", args[0]);
         super.setColAndValue("name", args[1]);
         super.setColAndValue("age", args[2]);
@@ -20,7 +20,7 @@ public class PersonRecord extends BaseRecord {
     }
 
     @Override
-    public PersonRecord buildFields(LinkedHashMap<String, String> colAndValue) {
+    public BaseRecord buildFields(LinkedHashMap<String, String> colAndValue) {
         super.setColAndValue(colAndValue);
         return this;
     }

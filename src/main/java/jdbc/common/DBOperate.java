@@ -17,7 +17,7 @@ public interface DBOperate<T> {
     /**
      * 插入数据
      */
-    <T> void insert(String tablename, Class<T> clazz, ArrayList<T> records);
+    <T> void insert(String tablename, Class<T> clazz, ArrayList<BaseRecord> records);
 
     /**
      * 查询数据

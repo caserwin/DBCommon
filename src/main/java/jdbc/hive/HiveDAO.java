@@ -1,9 +1,6 @@
 package jdbc.hive;
 
-import jdbc.common.DBOperate;
-import jdbc.common.FileUtil;
-import jdbc.common.ReflectionUtil;
-import jdbc.common.SQLUtil;
+import jdbc.common.*;
 import jdbc.common.conn.DBConnection;
 import jdbc.common.tuple.Tuple2;
 import jdbc.common.tuple.Tuple3;
@@ -45,7 +42,7 @@ public class HiveDAO implements DBOperate<Object> {
     }
 
     @Override
-    public <T> void insert(String tablename, Class<T> clazz, ArrayList<T> record) {
+    public <T> void insert(String tablename, Class<T> clazz, ArrayList<BaseRecord> record) {
 
     }
 
@@ -60,7 +57,7 @@ public class HiveDAO implements DBOperate<Object> {
     }
 
 
-    public <T> void loadToHive(ArrayList<T> records, Class<T> clazz, String tableName, String path) {
+    public <T> void loadToHive(ArrayList<BaseRecord> records, Class<T> clazz, String tableName, String path) {
         try {
             FileUtil.writeByStream(records.stream().map(x -> ReflectionUtil.getValues(x, clazz).stream().collect(Collectors.joining("\t"))).collect(Collectors.toList()), path);
             // 每一层目录都设置 777 权限

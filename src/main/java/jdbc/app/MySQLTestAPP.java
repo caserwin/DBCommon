@@ -1,5 +1,7 @@
 package jdbc.app;
 
+import jdbc.app.record.PersonRecord;
+import jdbc.common.BaseRecord;
 import jdbc.common.tuple.Tuple3;
 import jdbc.mysql.MysqlDAO;
 import java.util.ArrayList;
@@ -13,30 +15,28 @@ public class MySQLTestAPP {
 //            System.out.println("args error!");
 //            return;
 //        }
-        String table = "company";
+        String table = "person";
 
         MysqlDAO mysqlDAO = new MysqlDAO();
-//        ArrayList<PersonRecord> records = new ArrayList<>();
-//        records.add(new PersonRecord().buildFields("2", "erwin1", "19", "male"));
-//        records.add(new PersonRecord().buildFields("3", "erwin2", "29", "male"));
-//        records.add(new PersonRecord().buildFields("4", "erwin3", "25", "female"));
-
-        ArrayList<CompanyRecord> records = new ArrayList<>();
-        records.add(new CompanyRecord().buildFields("2", "company1", "杭州", "111"));
-        records.add(new CompanyRecord().buildFields("3", "company2", "上海", "222"));
-        records.add(new CompanyRecord().buildFields("4", "company3", "北京", "333"));
+        ArrayList<BaseRecord> records = new ArrayList<>();
+        records.add(new PersonRecord().buildFields("2", "erwin1", "19", "male"));
+        records.add(new PersonRecord().buildFields("3", "erwin2", "29", "male"));
+        records.add(new PersonRecord().buildFields("4", "erwin3", "25", "female"));
 
         // 创建表
-        mysqlDAO.create(table, CompanyRecord.class);
+        mysqlDAO.create(table, PersonRecord.class);
         // 插入表
-//        mysqlDAO.insert(table, CompanyRecord.class, records);
+        mysqlDAO.insert(table, PersonRecord.class, records);
         // 查询表
         ArrayList<Tuple3<String, String, String>> conds = new ArrayList<>();
-        conds.add(new Tuple3("cname", "like", "compa%"));
+        conds.add(new Tuple3("name", "like", "erwin%"));
 
-        ArrayList<CompanyRecord> companyRecords = mysqlDAO.select(table, CompanyRecord.class, new String[]{"cid", "cname"}, conds);
-        for (CompanyRecord cr : companyRecords) {
+        ArrayList<PersonRecord> personRecords = mysqlDAO.select(table, PersonRecord.class, new String[]{"id", "name"}, conds);
+        for (PersonRecord cr : personRecords) {
             System.out.println(cr);
         }
+        // 更新表
+
+
     }
 }

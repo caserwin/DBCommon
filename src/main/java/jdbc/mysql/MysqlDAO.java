@@ -1,5 +1,6 @@
 package jdbc.mysql;
 
+import jdbc.common.BaseRecord;
 import jdbc.common.DBOperate;
 import jdbc.common.ReflectionUtil;
 import jdbc.common.SQLUtil;
@@ -67,7 +68,7 @@ public class MysqlDAO implements DBOperate<Object> {
     }
 
     @Override
-    public <T> void insert(String tablename, Class<T> clazz, ArrayList<T> records) {
+    public <T> void insert(String tablename, Class<T> clazz, ArrayList<BaseRecord> records) {
         if (records.size() == 0) {
             System.out.println("record is null !!");
             return;
