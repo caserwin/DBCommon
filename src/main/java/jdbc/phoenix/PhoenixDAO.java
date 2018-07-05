@@ -69,6 +69,7 @@ public class PhoenixDAO implements DBOperate<Object> {
 
 
     @Override
-    public <T> void update(String tablename, Class<T> clazz, ArrayList<Tuple2<String, String>> cols, ArrayList<Tuple3<String, String, String>> conds) {
+    public <T> int update(String tablename, Class<T> clazz, ArrayList<Tuple2<String, String>> cols, ArrayList<Tuple3<String, String, String>> conds) {
+        return 0;
     }
 }

@@ -27,5 +27,5 @@ public interface DBOperate<T> {
     /**
      * 更新数据
      */
-    <T> void update(String tablename, Class<T> clazz, ArrayList<Tuple2<String, String>>  cols, ArrayList<Tuple3<String, String, String>> conds);
+    <T> int update(String tablename, Class<T> clazz, ArrayList<Tuple2<String, String>>  cols, ArrayList<Tuple3<String, String, String>> conds);
 }

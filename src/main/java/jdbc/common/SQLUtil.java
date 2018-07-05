@@ -43,7 +43,8 @@ public class SQLUtil {
         return recordLS;
     }
 
-    public static <T> void update(Connection conn, String tablename, Class<T> clazz, ArrayList<Tuple2<String, String>> cols, ArrayList<Tuple3<String, String, String>> conds) {
+    public static <T> int update(Connection conn, String tablename, Class<T> clazz, ArrayList<Tuple2<String, String>> cols, ArrayList<Tuple3<String, String, String>> conds) {
+        int affectNum = 0;
         // update person set age=29 where gender='female';
         HashMap<String, String> colAndType = ReflectionUtil.getColAndType(clazz);
         String colsStr = cols.stream().map(x -> {
@@ -56,8 +57,15 @@ public class SQLUtil {
 
         String sql = "UPDATE " + tablename + " SET " + colsStr;
         sql = buildSQLCond(sql, conds, colAndType);
-
         System.out.println(sql);
+
+        try {
+            Statement stmt = conn.createStatement();
+            affectNum = stmt.executeUpdate(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return affectNum;
     }
 
     private static String buildSQLCond(String sql, ArrayList<Tuple3<String, String, String>> conds, HashMap<String, String> colAndType) {
