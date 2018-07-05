@@ -115,7 +115,7 @@ public static void main(String[] args) {
 ```
 SELECT id,name FROM person where name like 'erwin%'
 ```
-<div align=center><img width="1000" height="140" src="https://github.com/caserwin/DBCommon/raw/master/pic/DBCommon_demo3.png"/></div>
+<div align=center><img width="1000" height="100" src="https://github.com/caserwin/DBCommon/raw/master/pic/DBCommon_demo3.png"/></div>
 
 ### 3.6 更新表
 ```
