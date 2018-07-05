@@ -37,5 +37,6 @@ public class HiveTestAPP {
         for (PersonRecord ps : personRecords) {
             System.out.println(ps);
         }
+
     }
 }
