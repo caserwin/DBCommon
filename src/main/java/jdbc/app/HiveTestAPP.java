@@ -31,12 +31,11 @@ public class HiveTestAPP {
         // 查询表
         ArrayList<Tuple3<String, String, String>> conds = new ArrayList<>();
         conds.add(new Tuple3("name", "like", "erwin%"));
-        conds.add(new Tuple3("id", "in", "(1,2)"));
+        conds.add(new Tuple3("id", "in", "(1,2,3)"));
 
         ArrayList<PersonRecord> personRecords = hiveDAO.select(table, PersonRecord.class, new String[]{"id", "name"}, conds);
         for (PersonRecord ps : personRecords) {
             System.out.println(ps);
         }
-
     }
 }
