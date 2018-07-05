@@ -8,6 +8,7 @@ import jdbc.common.tuple.Tuple2;
 import jdbc.common.tuple.Tuple3;
 import jdbc.common.conn.DBConnection;
 import org.apache.commons.lang.StringUtils;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -103,7 +104,7 @@ public class MysqlDAO implements DBOperate<Object> {
     }
 
     @Override
-    public <T> void update(String tablename, Class<T> clazz, ArrayList<Tuple2<String, String>> cols, ArrayList<Tuple3<String, String, String>> cond) {
-
+    public <T> void update(String tablename, Class<T> clazz, ArrayList<Tuple2<String, String>> cols, ArrayList<Tuple3<String, String, String>> conds) {
+        SQLUtil.update(this.conn, tablename, clazz, cols, conds);
     }
 }

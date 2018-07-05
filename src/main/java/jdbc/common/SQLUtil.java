@@ -1,5 +1,6 @@
 package jdbc.common;
 
+import jdbc.common.tuple.Tuple2;
 import jdbc.common.tuple.Tuple3;
 
 import java.sql.Connection;
@@ -22,16 +23,8 @@ public class SQLUtil {
         String fields = Stream.of(cols).collect(Collectors.joining(","));
         HashMap<String, String> colAndType = ReflectionUtil.getColAndType(clazz);
         String sql = "SELECT " + fields + " FROM " + tablename;
-        if (conds != null && conds.size() != 0) {
-            String condStr = conds.stream().map(x -> {
-                if ("string".equals(colAndType.get(x.column.toLowerCase()).toLowerCase())) {
-                    return x.column + " " + x.operator + " " + getStrInCheck(x.operator, x.value);
-                } else {
-                    return x.column + " " + x.operator + " " + x.value;
-                }
-            }).collect(Collectors.joining(" and "));
-            sql = sql + " where " + condStr;
-        }
+        sql = buildSQLCond(sql, conds, colAndType);
+
         System.out.println(sql);
         try {
             Statement stmt = conn.createStatement();
@@ -50,6 +43,37 @@ public class SQLUtil {
         return recordLS;
     }
 
+    public static <T> void update(Connection conn, String tablename, Class<T> clazz, ArrayList<Tuple2<String, String>> cols, ArrayList<Tuple3<String, String, String>> conds) {
+        // update person set age=29 where gender='female';
+        HashMap<String, String> colAndType = ReflectionUtil.getColAndType(clazz);
+        String colsStr = cols.stream().map(x -> {
+            if ("string".equals(colAndType.get(x.col.toLowerCase()).toLowerCase())) {
+                return x.col + " = '" + x.value + "'";
+            } else {
+                return x.col + " = " + x.value;
+            }
+        }).collect(Collectors.joining(","));
+
+        String sql = "UPDATE " + tablename + " SET " + colsStr;
+        sql = buildSQLCond(sql, conds, colAndType);
+
+        System.out.println(sql);
+    }
+
+    private static String buildSQLCond(String sql, ArrayList<Tuple3<String, String, String>> conds, HashMap<String, String> colAndType) {
+        if (conds != null && conds.size() != 0) {
+            String condStr = conds.stream().map(x -> {
+                if ("string".equals(colAndType.get(x.column.toLowerCase()).toLowerCase())) {
+                    return x.column + " " + x.operator + " " + getStrInCheck(x.operator, x.value);
+                } else {
+                    return x.column + " " + x.operator + " " + x.value;
+                }
+            }).collect(Collectors.joining(" and "));
+            sql = sql + " where " + condStr;
+        }
+        return sql;
+    }
+
     private static String getStrInCheck(String operator, String value) {
         if ("in".equals(operator.toLowerCase())) {
             return value;
@@ -57,4 +81,5 @@ public class SQLUtil {
             return "'" + value + "'";
         }
     }
+
 }
