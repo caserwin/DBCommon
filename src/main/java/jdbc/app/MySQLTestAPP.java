@@ -40,5 +40,12 @@ public class MySQLTestAPP {
         conds2.add(new Tuple3("gender", "=", "female"));
         int affectNum = mysqlDAO.update(table, PersonRecord.class, cols, conds2);
         System.out.println("更新" + affectNum + "行！");
+
+        // 删除行
+        ArrayList<Tuple3<String, String, String>> conds3 = new ArrayList<>();
+        conds3.add(new Tuple3("name", "=", "erwin2"));
+        int affectNum2 = mysqlDAO.delete(table, PersonRecord.class, conds3);
+        System.out.println("更新" + affectNum2 + "行！");
+
     }
 }

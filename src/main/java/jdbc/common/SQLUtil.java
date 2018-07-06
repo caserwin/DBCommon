@@ -2,7 +2,6 @@ package jdbc.common;
 
 import jdbc.common.tuple.Tuple2;
 import jdbc.common.tuple.Tuple3;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -37,6 +36,7 @@ public class SQLUtil {
                 recordLS.add(ReflectionUtil.buildFields(clazz, colAndValue));
             }
             rs.close();
+            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -62,6 +62,24 @@ public class SQLUtil {
         try {
             Statement stmt = conn.createStatement();
             affectNum = stmt.executeUpdate(sql);
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return affectNum;
+    }
+
+    public static <T> int delete(Connection conn, String tablename, Class<T> clazz, ArrayList<Tuple3<String, String, String>> conds) {
+        int affectNum = 0;
+        //  delete from person where name ='yyy';
+        HashMap<String, String> colAndType = ReflectionUtil.getColAndType(clazz);
+        String sql = "delete from " + tablename;
+        sql = buildSQLCond(sql, conds, colAndType);
+        System.out.println(sql);
+        try {
+            Statement stmt = conn.createStatement();
+            affectNum = stmt.executeUpdate(sql);
+            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -89,5 +107,4 @@ public class SQLUtil {
             return "'" + value + "'";
         }
     }
-
 }

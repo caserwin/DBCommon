@@ -60,6 +60,7 @@ public class MysqlDAO implements DBOperate<Object> {
         try {
             Statement stmt = this.conn.createStatement();
             stmt.execute(sql);
+            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -90,6 +91,8 @@ public class MysqlDAO implements DBOperate<Object> {
             }
             pstmt.executeBatch();
             this.conn.commit();
+            this.conn.setAutoCommit(true);
+            pstmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -107,6 +110,6 @@ public class MysqlDAO implements DBOperate<Object> {
 
     @Override
     public <T> int delete(String tablename, Class<T> clazz, ArrayList<Tuple3<String, String, String>> conds) {
-        return 0;
+        return SQLUtil.delete(this.conn, tablename, clazz, conds);
     }
 }

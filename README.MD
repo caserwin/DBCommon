@@ -2,14 +2,14 @@
 java 操作数据库时，因为每张的表结构不同，一般写一个方法来对应操作一张表。比如：现在要查有A, B两张表，
 则一般要写两个方法来实现查询。代码比较冗余。。。<br>
 
-本项目就是解决这个问题的，通过配置文件和少量代码实现增、改、查数据库。目前支持 Hive、Phoenix、Mysql三种数据库。<br>
+本项目就是解决这个问题的，通过配置文件和少量代码实现增、删、改、查数据库。目前支持 Hive、Phoenix、Mysql三种数据库。<br>
 
 局限：目前不支持多表查询、join 操作等，只适用于对单表操作。而且只支持 string, int, float 三种数据格式，因为现在不想考虑那么多。会慢慢更新的。
 
 ## 2 如何使用？？
 1. 首先需要在application.conf中定义一个表的schema。
 2. 继承 BaseRecord 类，需用户自定义 cls 属性和实现 buildFields()方法。
-3. 支持Hive,mysql,phoenix 的建表、查询、更新、插入等操作。
+3. 支持Hive,mysql,phoenix 的建表、查询、更新、插入、删除等操作。
 
 
 ## 3 Demo
@@ -141,4 +141,21 @@ UPDATE person SET name = 'caroline',age = 26 where gender = 'female'
 
 
 ### 3.7 删除表
-就是删除表中的字段，Code 没有实现、、就是一个套路、、不想写了、、
+
+```
+public static void main(String[] args) {
+    String table = "person";
+    MysqlDAO mysqlDAO = new MysqlDAO();
+
+    // 删除行
+    ArrayList<Tuple3<String, String, String>> conds3 = new ArrayList<>();
+    conds3.add(new Tuple3("name", "=", "erwin2"));
+    int affectNum2 = mysqlDAO.delete(table, PersonRecord.class, conds3);
+    System.out.println("更新" + affectNum2 + "行！");
+}
+```
+拼接sql输出如下：
+```
+delete from person where name = 'erwin2'
+```
+<div align=left><img width="800" height="220" src="https://github.com/caserwin/DBCommon/raw/master/pic/DBCommon_demo6.png"/></div>
