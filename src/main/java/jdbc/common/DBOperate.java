@@ -28,4 +28,10 @@ public interface DBOperate<T> {
      * 更新数据
      */
     <T> int update(String tablename, Class<T> clazz, ArrayList<Tuple2<String, String>>  cols, ArrayList<Tuple3<String, String, String>> conds);
+
+
+    /**
+     * 删除数据
+     */
+    <T> int delete(String tablename, Class<T> clazz, ArrayList<Tuple3<String, String, String>> conds);
 }

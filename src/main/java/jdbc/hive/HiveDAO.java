@@ -16,12 +16,12 @@ import java.util.stream.Collectors;
  */
 public class HiveDAO implements DBOperate<Object> {
 
-    private String URLHIVE = "jdbc:hive2://10.29.42.49:10000/default";
-    private String DBType = "hive";
+    private String dbType = "hive";
+    private String hiveURL = ConstantUtil.getURL(dbType);
     private Connection conn;
 
     public HiveDAO() {
-        this.conn = new DBConnection().getConnection(DBType, URLHIVE);
+        this.conn = new DBConnection().getConnection(dbType, hiveURL);
     }
 
     @Override
@@ -53,6 +53,11 @@ public class HiveDAO implements DBOperate<Object> {
 
     @Override
     public <T> int update(String tablename, Class<T> clazz, ArrayList<Tuple2<String, String>> cols, ArrayList<Tuple3<String, String, String>> conds) {
+        return 0;
+    }
+
+    @Override
+    public <T> int delete(String tablename, Class<T> clazz, ArrayList<Tuple3<String, String, String>> conds) {
         return 0;
     }
 

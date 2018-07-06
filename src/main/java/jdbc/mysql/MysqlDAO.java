@@ -1,9 +1,6 @@
 package jdbc.mysql;
 
-import jdbc.common.BaseRecord;
-import jdbc.common.DBOperate;
-import jdbc.common.ReflectionUtil;
-import jdbc.common.SQLUtil;
+import jdbc.common.*;
 import jdbc.common.tuple.Tuple2;
 import jdbc.common.tuple.Tuple3;
 import jdbc.common.conn.DBConnection;
@@ -24,14 +21,14 @@ import java.util.stream.Stream;
  */
 public class MysqlDAO implements DBOperate<Object> {
 
-    private String URLMYSQL = "jdbc:mysql://localhost:3306/test";
-    private String username = "root";
-    private String password = "";
-    private String DBType = "mysql";
+    private String dbType = "mysql";
+    private String mysqlURL = ConstantUtil.getURL(dbType);
+    private String username = ConstantUtil.getUserName(dbType);
+    private String password = ConstantUtil.getPassWord(dbType);
     private Connection conn;
 
     public MysqlDAO() {
-        this.conn = new DBConnection().getConnection(DBType, URLMYSQL, username, password);
+        this.conn = new DBConnection().getConnection(dbType, mysqlURL, username, password);
     }
 
     @Override
@@ -106,5 +103,10 @@ public class MysqlDAO implements DBOperate<Object> {
     @Override
     public <T> int update(String tablename, Class<T> clazz, ArrayList<Tuple2<String, String>> cols, ArrayList<Tuple3<String, String, String>> conds) {
         return SQLUtil.update(this.conn, tablename, clazz, cols, conds);
+    }
+
+    @Override
+    public <T> int delete(String tablename, Class<T> clazz, ArrayList<Tuple3<String, String, String>> conds) {
+        return 0;
     }
 }

@@ -72,4 +72,9 @@ public class PhoenixDAO implements DBOperate<Object> {
     public <T> int update(String tablename, Class<T> clazz, ArrayList<Tuple2<String, String>> cols, ArrayList<Tuple3<String, String, String>> conds) {
         return 0;
     }
+
+    @Override
+    public <T> int delete(String tablename, Class<T> clazz, ArrayList<Tuple3<String, String, String>> conds) {
+        return 0;
+    }
 }
