@@ -45,7 +45,7 @@ public class SQLUtil {
 
     public static <T> int update(Connection conn, String tablename, Class<T> clazz, ArrayList<Tuple2<String, String>> cols, ArrayList<Tuple3<String, String, String>> conds) {
         int affectNum = 0;
-        // update person set age=29 where gender='female';
+        // demo: update person set age=18,name='ltq' where gender='female';
         HashMap<String, String> colAndType = ReflectionUtil.getColAndType(clazz);
         String colsStr = cols.stream().map(x -> {
             if ("string".equals(colAndType.get(x.col.toLowerCase()).toLowerCase())) {
@@ -86,7 +86,7 @@ public class SQLUtil {
         return affectNum;
     }
 
-    private static String buildSQLCond(String sql, ArrayList<Tuple3<String, String, String>> conds, HashMap<String, String> colAndType) {
+    public static String buildSQLCond(String sql, ArrayList<Tuple3<String, String, String>> conds, HashMap<String, String> colAndType) {
         if (conds != null && conds.size() != 0) {
             String condStr = conds.stream().map(x -> {
                 if ("string".equals(colAndType.get(x.column.toLowerCase()).toLowerCase())) {

@@ -11,9 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Properties;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -103,6 +101,23 @@ public class PhoenixDAO implements DBOperate<Object> {
 
     @Override
     public <T> int update(String tablename, Class<T> clazz, ArrayList<Tuple2<String, String>> cols, ArrayList<Tuple3<String, String, String>> conds) {
+        // demo: UPSERT INTO person(id, name, age) SELECT id,name,29 FROM person WHERE gender='male';
+        String[] pkArray = ReflectionUtil.getPrimaryKey(clazz);
+        HashSet<String> pkSet = new HashSet<>(Arrays.asList(pkArray));
+        int checkPKCol = cols.stream().filter(x -> pkSet.contains(x.col)).collect(Collectors.toList()).size();
+        if (checkPKCol > 0) {
+            System.out.println("can't support primary key value update !!");
+            return 0;
+        }
+
+        String fields = Stream.of(pkArray).collect(Collectors.joining(",")) + "," + cols.stream().map(x -> x.col).collect(Collectors.joining(","));
+        String values = Stream.of(pkArray).collect(Collectors.joining(",")) + "," + cols.stream().map(x -> x.value).collect(Collectors.joining(","));
+        HashMap<String, String> colAndType = ReflectionUtil.getColAndType(clazz);
+
+        String sql = "UPSERT INTO " + tablename + " (" + fields + ") SELECT " + values + " FROM " + tablename;
+        sql = SQLUtil.buildSQLCond(sql, conds, colAndType);
+
+        System.out.println(sql);
         return 0;
     }
 
