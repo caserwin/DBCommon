@@ -32,3 +32,7 @@
     <!--<scope>provided</scope>-->
 </dependency>
 ```
+
+## 说明
+关于phoenix insert和update 都是用一个 upsert 语法实现的。<br>
+单独upsert可以实现insert语法。upsert...select...可以实现 update 语法。
