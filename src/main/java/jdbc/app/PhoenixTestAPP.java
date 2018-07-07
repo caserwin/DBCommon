@@ -34,6 +34,7 @@ public class PhoenixTestAPP {
         }
         // 更新行
 
+
         // 删除行
         ArrayList<Tuple3<String, String, String>> conds3 = new ArrayList<>();
         conds3.add(new Tuple3("name", "=", "erwin2"));

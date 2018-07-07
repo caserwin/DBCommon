@@ -108,6 +108,6 @@ public class PhoenixDAO implements DBOperate<Object> {
 
     @Override
     public <T> int delete(String tablename, Class<T> clazz, ArrayList<Tuple3<String, String, String>> conds) {
-        return 0;
+        return SQLUtil.delete(this.conn, tablename, clazz, conds);
     }
 }
