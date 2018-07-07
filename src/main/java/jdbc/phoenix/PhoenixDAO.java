@@ -1,13 +1,14 @@
 package jdbc.phoenix;
 
-import jdbc.common.BaseRecord;
-import jdbc.common.DBOperate;
-import jdbc.common.ReflectionUtil;
-import jdbc.common.SQLUtil;
+import jdbc.common.*;
 import jdbc.common.tuple.Tuple2;
 import jdbc.common.tuple.Tuple3;
 import jdbc.common.conn.DBConnection;
+import jdbc.mysql.MysqlService;
+import org.apache.commons.lang.StringUtils;
+
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -20,20 +21,20 @@ import java.util.stream.Stream;
  */
 public class PhoenixDAO implements DBOperate<Object> {
 
-    private String URLPHOENIX = "jdbc:phoenix:localhost:2181";
-    private String DBType = "phoenix";
+    private String dbType = "phoenix";
+    private String phoenixURL = ConstantUtil.getURL(dbType);
     private Connection conn;
-    private int TTL = 3600 * 24 * 365;
-    private int SALT_BUCKETS = 50;
-    private String COL_FAMLIY = "info";
+    private int TTL = ConstantUtil.getPhoenixTTL();
+    private int SALT_BUCKETS = ConstantUtil.getPhoenixBUCKETS();
 
     public PhoenixDAO() {
-        this.conn = new DBConnection().getConnection(DBType, URLPHOENIX);
+        this.conn = new DBConnection().getConnection(dbType, phoenixURL);
     }
 
     @Override
     public <T> void create(String tablename, Class<T> clazz) {
         HashMap<String, String> colAndType = ReflectionUtil.getColAndType(clazz);
+        HashMap<String, String> colAndFamily = ReflectionUtil.getColAndFamily(clazz);
         HashMap<String, String> typeMap = PhoenixService.getTypeMap();
         String[] pkArray = ReflectionUtil.getPrimaryKey(clazz);
         String primaryKey = Stream.of(pkArray).collect(Collectors.joining(","));
@@ -43,7 +44,7 @@ public class PhoenixDAO implements DBOperate<Object> {
                     return x.getKey() + " " + typeMap.get(x.getValue()) + " NOT NULL";
                 } else {
                     // 不是主键加上列簇名
-                    return COL_FAMLIY + "." + x.getKey() + " " + typeMap.get(x.getValue());
+                    return colAndFamily.get(x.getKey()) + "." + x.getKey() + " " + typeMap.get(x.getValue());
                 }
             }
         ).collect(Collectors.joining(","));
@@ -63,9 +64,39 @@ public class PhoenixDAO implements DBOperate<Object> {
     }
 
     @Override
-    public <T> void insert(String tablename, Class<T> clazz, ArrayList<BaseRecord> records) {
-    }
+    public <T> void insert(String tablename, Class<T> clazz, ArrayList<BaseRecord> records, boolean ifIgnoreDuplicateKey) {
+        if (records.size() == 0) {
+            System.out.println("record is null !!");
+            return;
+        }
+        String[] cols = ReflectionUtil.getCols(clazz);
+        HashMap<String, String> colAndType = ReflectionUtil.getColAndType(clazz);
+        String fields = Stream.of(cols).collect(Collectors.joining(","));
+        String valueNUM = StringUtils.repeat("?,", cols.length);
+        String sql = "UPSERT INTO " + tablename + " (" + fields + ") VALUES(" + valueNUM.substring(0, valueNUM.length() - 1) + ")";
 
+        sql = ifIgnoreDuplicateKey ? sql + " ON DUPLICATE KEY IGNORE" : sql;
+        System.out.println(sql);
+        try {
+            this.conn.setAutoCommit(false);
+            PreparedStatement pstmt = this.conn.prepareStatement(sql);
+            for (int i = 0; i < records.size(); i++) {
+                HashMap<String, String> colAndValue = ReflectionUtil.getColAndValue(records.get(i), clazz);
+                for (int j = 0; j < cols.length; j++) {
+                    MysqlService.setPSTMT(pstmt, j + 1, colAndType.get(cols[j]), colAndValue.get(cols[j]));
+                }
+                pstmt.addBatch();
+            }
+            pstmt.executeBatch();
+            this.conn.commit();
+            this.conn.setAutoCommit(true);
+            pstmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(sql);
+    }
 
 
     @Override

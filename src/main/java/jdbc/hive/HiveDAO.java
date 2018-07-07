@@ -42,7 +42,7 @@ public class HiveDAO implements DBOperate<Object> {
     }
 
     @Override
-    public <T> void insert(String tablename, Class<T> clazz, ArrayList<BaseRecord> record) {
+    public <T> void insert(String tablename, Class<T> clazz, ArrayList<BaseRecord> record, boolean ifIgnoreDuplicateKey) {
 
     }
 
@@ -62,13 +62,17 @@ public class HiveDAO implements DBOperate<Object> {
     }
 
 
-    public <T> void loadToHive(ArrayList<BaseRecord> records, Class<T> clazz, String tableName, String path) {
+    public <T> void loadToHive(ArrayList<BaseRecord> records, Class<T> clazz, String tableName, String path, boolean ifLocal, boolean ifOverride) {
+        // LOAD DATA [LOCAL] INPATH 'filepath' [OVERWRITE] INTO TABLE tablename [PARTITION (partcol1=val1, partcol2=val2 ...)]
+        // PARTITION 语法可以以后实现。
         try {
             FileUtil.writeByStream(records.stream().map(x -> ReflectionUtil.getValues(x, clazz).stream().collect(Collectors.joining("\t"))).collect(Collectors.toList()), path);
             // 每一层目录都设置 777 权限
             FileUtil.changeFolderPermission(path, true);
             Statement stmt = this.conn.createStatement();
-            String sql = "LOAD DATA LOCAL INPATH '" + path + "' into table " + tableName;
+            String override = ifOverride ? "OVERWRITE" : "";
+            String local = ifLocal ? "LOCAL" : "";
+            String sql = "LOAD DATA " + local + " INPATH '" + path + "' " + override + " into table " + tableName;
             System.out.println(sql);
             stmt.execute(sql);
         } catch (Exception e) {

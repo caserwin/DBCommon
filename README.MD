@@ -18,6 +18,25 @@ java 操作数据库时，因为每张的表结构不同，一般写一个方法
 ### 3.1 配置application.conf 文件
 ```
 database {
+  connection{
+    mysql{
+      host = "localhost"
+      port = "3306"
+      dbname = "test"
+      username = "root"
+      password =""
+    }
+    hive{
+      host = "localhost"
+      port = "3306"
+      dbname = "test"
+    }
+    phoenix{
+      zookeeper.address = "localhost"
+      zookeeper.port = "2181"
+    }
+  }
+
   table {
     person {
       cols = "id,name,age,gender"
@@ -28,7 +47,8 @@ database {
   }
 }
 ```
-cols 是表字段，type 是表字段对应的各个属性，comment是每个表字段备注，primaryKey定义了表主键。
+connection 中配置的是各个类型数据库的连接信息。
+table中的cols 是表字段，type 是表字段对应的各个属性，comment是每个表字段备注，primaryKey定义了表主键。
 
 ### 3.2 新建一个继承 BaseRecord 的PersonRecord类。
 例如：

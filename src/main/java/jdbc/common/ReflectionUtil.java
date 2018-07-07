@@ -84,6 +84,19 @@ public class ReflectionUtil {
         return colAndComment;
     }
 
+    public static <T> HashMap<String, String> getColAndFamily(Class<T> clazz) {
+        HashMap<String, String> colAndFamily = null;
+        try {
+            String cls = clazz.getField("cls").get(clazz).toString();
+            Method m = clazz.getMethod("getColAndFamily", String.class);
+            colAndFamily = (HashMap<String, String>) m.invoke(null, cls);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+        return colAndFamily;
+    }
+
+
     public static <T> HashMap<String, String> getColAndValue(Object obj, Class<T> clazz) {
         HashMap<String, String> colAndValue = null;
         try {

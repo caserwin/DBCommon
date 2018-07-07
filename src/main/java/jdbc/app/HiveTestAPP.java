@@ -27,7 +27,7 @@ public class HiveTestAPP {
         // 创建表
         hiveDAO.create(table, PersonRecord.class);
         // 插入表
-        hiveDAO.loadToHive(records, PersonRecord.class, table, path);
+        hiveDAO.loadToHive(records, PersonRecord.class, table, path, true, true);
         // 查询表
         ArrayList<Tuple3<String, String, String>> conds = new ArrayList<>();
         conds.add(new Tuple3("name", "like", "erwin%"));

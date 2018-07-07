@@ -67,7 +67,7 @@ public class MysqlDAO implements DBOperate<Object> {
     }
 
     @Override
-    public <T> void insert(String tablename, Class<T> clazz, ArrayList<BaseRecord> records) {
+    public <T> void insert(String tablename, Class<T> clazz, ArrayList<BaseRecord> records, boolean ifIgnoreDuplicateKey) {
         if (records.size() == 0) {
             System.out.println("record is null !!");
             return;
@@ -77,7 +77,8 @@ public class MysqlDAO implements DBOperate<Object> {
 
         String fields = Stream.of(cols).map(x -> "`" + x + "`").collect(Collectors.joining(","));
         String valueNUM = StringUtils.repeat("?,", cols.length);
-        String sql = "INSERT INTO `" + tablename + "` (" + fields + ") VALUES(" + valueNUM.substring(0, valueNUM.length() - 1) + ");";
+
+        String sql = ifIgnoreDuplicateKey ? "INSERT IGNORE" : "REPLACE" + " `" + tablename + "` (" + fields + ") VALUES(" + valueNUM.substring(0, valueNUM.length() - 1) + ");";
         System.out.println(sql);
         try {
             this.conn.setAutoCommit(false);

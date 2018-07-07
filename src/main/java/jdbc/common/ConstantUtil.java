@@ -2,7 +2,6 @@ package jdbc.common;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * Created by yidxue on 2018/6/28
@@ -31,7 +30,9 @@ public class ConstantUtil {
                 dbname = conf.getString("database.connection." + dbType + ".dbname");
                 return "jdbc:hive2://" + host + ":" + port + "/" + dbname;
             case "phoenix":
-                return "";
+                zkAddr = conf.getString("database.connection." + dbType + ".zookeeper.address");
+                port = conf.getString("database.connection." + dbType + ".zookeeper.port");
+                return "jdbc:phoenix:" + zkAddr + ":" + port;
             default:
                 return "";
         }
@@ -70,6 +71,30 @@ public class ConstantUtil {
             return conf.getString("database.table." + cls + ".comment").toLowerCase().split(",");
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    public static String[] getPhoenixFamily(String cls) {
+        try {
+            return conf.getString("database.table." + cls + ".phoenix.family").toLowerCase().split(",");
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static int getPhoenixTTL() {
+        try {
+            return Integer.parseInt(conf.getString("database.connection.phoenix.ttl").trim());
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    public static int getPhoenixBUCKETS() {
+        try {
+            return Integer.parseInt(conf.getString("database.connection.phoenix.salt_buckets").trim());
+        } catch (Exception e) {
+            return 100;
         }
     }
 }

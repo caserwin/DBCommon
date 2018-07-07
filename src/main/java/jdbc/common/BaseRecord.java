@@ -50,6 +50,11 @@ public abstract class BaseRecord {
         return ConstantUtil.getComments(cls);
     }
 
+    public static String[] getFamilys(String cls) {
+        return ConstantUtil.getPhoenixFamily(cls);
+    }
+
+
     public static HashMap<String, String> getColAndType(String cls) {
         LinkedHashMap<String, String> colAndType = new LinkedHashMap<>();
         String[] cols = getCols(cls);
@@ -79,6 +84,23 @@ public abstract class BaseRecord {
             colAndComment.put(cols[i], comments[i]);
         }
         return colAndComment;
+    }
+
+    public static HashMap<String, String> getColAndFamily(String cls) {
+        LinkedHashMap<String, String> colAndFamily = new LinkedHashMap<>();
+        String[] cols = getCols(cls);
+        String[] familys = getFamilys(cls);
+        if (familys == null){
+            return colAndFamily;
+        }
+        if (cols.length!=familys.length){
+            System.err.println("column length not match with comment length !!");
+            return colAndFamily;
+        }
+        for (int i = 0; i < cols.length; i++) {
+            colAndFamily.put(cols[i], familys[i]);
+        }
+        return colAndFamily;
     }
 
 
