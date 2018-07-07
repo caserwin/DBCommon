@@ -5,6 +5,7 @@ import jdbc.common.ConstantUtil;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 /**
  * @author yidxue
@@ -29,6 +30,21 @@ public class DBConnection {
         return conn;
     }
 
+    public Connection getConnection(String type, String url, Properties properties) {
+        if (null == conn) {
+            synchronized (DBConnection.class) {
+                if (null == conn) {
+                    try {
+                        Class.forName(getDBDriver(type));
+                        conn = DriverManager.getConnection(url, properties);
+                    } catch (SQLException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return conn;
+    }
 
     public Connection getConnection(String type, String url, String username, String password) {
         if (null == conn) {

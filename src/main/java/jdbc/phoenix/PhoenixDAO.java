@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -23,12 +24,15 @@ public class PhoenixDAO implements DBOperate<Object> {
 
     private String dbType = "phoenix";
     private String phoenixURL = ConstantUtil.getURL(dbType);
+    private Properties properties = new Properties();
     private Connection conn;
     private int TTL = ConstantUtil.getPhoenixTTL();
     private int SALT_BUCKETS = ConstantUtil.getPhoenixBUCKETS();
 
     public PhoenixDAO() {
-        this.conn = new DBConnection().getConnection(dbType, phoenixURL);
+        properties.setProperty("phoenix.schema.mapSystemTablesToNamespace", "true");
+        properties.setProperty("phoenix.schema.isNamespaceMappingEnabled", "true");
+        this.conn = new DBConnection().getConnection(dbType, phoenixURL, properties);
     }
 
     @Override
@@ -48,7 +52,7 @@ public class PhoenixDAO implements DBOperate<Object> {
                 }
             }
         ).collect(Collectors.joining(","));
-        String sql = "CREATE TABLE IF NOT EXISTS " + tablename + " (" + field + " CONSTRAINT PK PRIMARY KEY(" + primaryKey + ")) SALT_BUCKETS=" + SALT_BUCKETS + ", TTL=" + TTL + ";";
+        String sql = "CREATE TABLE IF NOT EXISTS " + tablename + " (" + field + " CONSTRAINT PK PRIMARY KEY(" + primaryKey + ")) SALT_BUCKETS=" + SALT_BUCKETS + ", TTL=" + TTL;
         System.out.println(sql);
         try {
             Statement stmt = this.conn.createStatement();
@@ -94,8 +98,6 @@ public class PhoenixDAO implements DBOperate<Object> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        System.out.println(sql);
     }
 
 

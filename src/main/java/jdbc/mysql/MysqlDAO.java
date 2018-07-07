@@ -78,7 +78,7 @@ public class MysqlDAO implements DBOperate<Object> {
         String fields = Stream.of(cols).map(x -> "`" + x + "`").collect(Collectors.joining(","));
         String valueNUM = StringUtils.repeat("?,", cols.length);
 
-        String sql = ifIgnoreDuplicateKey ? "INSERT IGNORE" : "REPLACE" + " `" + tablename + "` (" + fields + ") VALUES(" + valueNUM.substring(0, valueNUM.length() - 1) + ");";
+        String sql = (ifIgnoreDuplicateKey ? "INSERT IGNORE" : "REPLACE") + " `" + tablename + "` (" + fields + ") VALUES(" + valueNUM.substring(0, valueNUM.length() - 1) + ");";
         System.out.println(sql);
         try {
             this.conn.setAutoCommit(false);

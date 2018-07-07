@@ -22,7 +22,7 @@ public class MySQLTestAPP {
         records.add(new PersonRecord().buildFields("2", "erwin1", "19", "male"));
         records.add(new PersonRecord().buildFields("3", "erwin2", "29", "male"));
         records.add(new PersonRecord().buildFields("4", "erwin3", "25", "female"));
-        mysqlDAO.insert(table, PersonRecord.class, records, true);
+        mysqlDAO.insert(table, PersonRecord.class, records, false);
         // 查询表
         ArrayList<Tuple3<String, String, String>> conds = new ArrayList<>();
         conds.add(new Tuple3("name", "like", "erwin%"));
