@@ -87,8 +87,8 @@ public class PhoenixTestAPP {
 ```
 控制台输出：
 <div align=left><img width="1200" height="150" src="https://github.com/caserwin/DBCommon/raw/master/pic/DBCommon_demo7.png"/></div>
-phoenix 表查询输出：
-<div align=left><img width="1200" height="150" src="https://github.com/caserwin/DBCommon/raw/master/pic/DBCommon_demo8.png"/></div>
+phoenix 表最终查询输出：
+<div align=left><img width="600" height="140" src="https://github.com/caserwin/DBCommon/raw/master/pic/DBCommon_demo8.png"/></div>
 
 ## 说明
 关于phoenix insert和update 都用upsert 语法实现。<br>

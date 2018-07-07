@@ -19,6 +19,56 @@
 </dependency>
 ```
 
+## 示例demo:
+```
+import jdbc.app.record.PersonRecord;
+import jdbc.common.BaseRecord;
+import jdbc.common.tuple.Tuple3;
+import jdbc.hive.HiveDAO;
+import java.util.ArrayList;
+
+/**
+ * Created by yidxue on 2018/7/4
+ */
+public class HiveTestAPP {
+    public static void main(String[] args) {
+        if (args.length != 2) {
+            System.out.println("args error!");
+            return;
+        }
+        String table = args[0];
+        String path = args[1];
+
+        HiveDAO hiveDAO = new HiveDAO();
+        ArrayList<BaseRecord> records = new ArrayList<>();
+        records.add(new PersonRecord().buildFields("2", "erwin1", "19", "male"));
+        records.add(new PersonRecord().buildFields("3", "erwin2", "29", "male"));
+        records.add(new PersonRecord().buildFields("4", "erwin3", "25", "female"));
+
+        // 创建表
+        hiveDAO.create(table, PersonRecord.class);
+        // 插入表
+        hiveDAO.loadToHive(records, PersonRecord.class, table, path, true, true);
+        // 查询表
+        ArrayList<Tuple3<String, String, String>> conds = new ArrayList<>();
+        conds.add(new Tuple3("name", "like", "erwin%"));
+        conds.add(new Tuple3("id", "in", "(1,2,3)"));
+
+        ArrayList<PersonRecord> personRecords = hiveDAO.select(table, PersonRecord.class, new String[]{"id", "name"}, conds);
+        for (PersonRecord ps : personRecords) {
+            System.out.println(ps);
+        }
+    }
+}
+```
+
+## 结果示例
+HiveTestAPP 执行结果如下展示：
+<div align=left><img width="1000" height="130" src="https://github.com/caserwin/DBCommon/raw/master/pic/DBCommon_demo5.png"/></div>
+
+## 说明
+先创建表，再通过load语法加载数据。这里时 load local的文件到Hive，所以必须注意路径的权限问题，每一层级路径的权限最好都是777。
+
 ## 注意点
 Hive 必须通过配置才能支持行级别的插入、删除和更新。否则会报如下错误：
 ```
@@ -68,9 +118,4 @@ Caused by: java.lang.RuntimeException: org.apache.hadoop.hive.ql.parse.SemanticE
 	at org.apache.hive.service.cli.operation.SQLOperation.prepare(SQLOperation.java:185)
 ```
 
-
 所以这里我就实现了hive的load语法。insert、update先偷懒不写了。
-
-## 结果
-HiveTestAPP 执行结果如下展示：
-<div align=left><img width="1200" height="130" src="https://github.com/caserwin/DBCommon/raw/master/pic/DBCommon_demo5.png"/></div>

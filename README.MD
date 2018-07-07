@@ -106,12 +106,12 @@ public static void main(String[] args) {
     records.add(new PersonRecord().buildFields("2", "erwin1", "19", "male"));
     records.add(new PersonRecord().buildFields("3", "erwin2", "29", "male"));
     records.add(new PersonRecord().buildFields("4", "erwin3", "25", "female"));
-    mysqlDAO.insert(table, PersonRecord.class, records);
+    mysqlDAO.insert(table, PersonRecord.class, records, true);
 }
 ```
 PreparedStatement 对应的sql如下：
 ```
-INSERT INTO `person` (`id`,`name`,`age`,`gender`) VALUES(?,?,?,?);
+INSERT IGNORE INTO `person` (`id`,`name`,`age`,`gender`) VALUES(?,?,?,?);
 ```
 <div align=left><img width="900" height="220" src="https://github.com/caserwin/DBCommon/raw/master/pic/DBCommon_demo2.png"/></div>
 
