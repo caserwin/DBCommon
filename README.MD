@@ -13,7 +13,9 @@ java 操作数据库时，因为每张的表结构不同，一般写一个方法
 
 
 ## 3 Demo
-以MysqlDAO 为例，以下为各个操作步骤示例
+以MysqlDAO 为例，以下为各个操作步骤示例<br>
+Phoenix demo 可见：https://github.com/caserwin/DBCommon/blob/master/src/main/java/jdbc/phoenix/README.MD<br>
+Hive demo 可见：https://github.com/caserwin/DBCommon/blob/master/src/main/java/jdbc/hive/README.MD
 
 ### 3.1 配置application.conf 文件
 ```
