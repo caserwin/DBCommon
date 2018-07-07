@@ -19,7 +19,7 @@
 </dependency>
 ```
 
-## 示例demo:
+## demo code:
 ```
 import jdbc.app.record.PersonRecord;
 import jdbc.common.BaseRecord;
@@ -66,9 +66,12 @@ public class HiveTestAPP {
 HiveTestAPP 执行结果如下展示：
 <div align=left><img width="1000" height="130" src="https://github.com/caserwin/DBCommon/raw/master/pic/DBCommon_demo5.png"/></div>
 
+hive 表如下：
+<div align=left><img width="1000" height="130" src="https://github.com/caserwin/DBCommon/raw/master/pic/DBCommon_demo9.png"/></div>
+
+
 ## 说明
 先创建表，再通过load语法加载数据。这里时load local的文件到Hive，所以必须注意路径的权限问题，每一层级路径的权限最好都是 777。最后查询数据。
-
 
 ## 注意点
 Hive 必须通过配置才能支持行级别的插入、删除和更新。否则会报如下错误：

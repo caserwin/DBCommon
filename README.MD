@@ -171,7 +171,7 @@ public static void main(String[] args) {
     ArrayList<Tuple3<String, String, String>> conds3 = new ArrayList<>();
     conds3.add(new Tuple3("name", "=", "erwin2"));
     int affectNum2 = mysqlDAO.delete(table, PersonRecord.class, conds3);
-    System.out.println("更新" + affectNum2 + "行！");
+    System.out.println("删除" + affectNum2 + "行！");
 }
 ```
 拼接sql输出如下：

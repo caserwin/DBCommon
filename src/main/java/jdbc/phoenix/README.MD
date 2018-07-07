@@ -33,7 +33,7 @@
 </dependency>
 ```
 
-## 关于Demo 运行结果
+## code Demo
 ```
 import jdbc.app.record.PersonRecord;
 import jdbc.common.BaseRecord;
